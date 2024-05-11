@@ -316,8 +316,13 @@ void screen_new_line(void)
 #else
 		if ((short)cwp->line_count >= (short)above + below - 1) {
 #endif
-			if (more_prompts)
+			if (more_prompts) {
+				if (f_setup.err_report_repeat) {
+					runtime_error_repeat(f_setup.err_report_repeat);
+					f_setup.err_report_repeat = 0;
+				}
 				os_more_prompt();
+			}
 			cwp->line_count = f_setup.context_lines;
 		}
 	}
@@ -1215,6 +1220,11 @@ void z_picture_data(void)
 
 	int height, width;
 	int i;
+
+	if (f_setup.blorb_file == NULL) {
+		runtime_error(ERR_PICTURE_MISSING);
+		f_setup.err_report_repeat = ERR_PICTURE_MISSING;
+	}
 
 	bool avail = os_picture_data(pic, &height, &width);
 

@@ -771,10 +771,11 @@ void 	z_window_size(void);
 void 	z_window_style(void);
 
 
-/* Definitions for error handling functions and error codes. */
-/* extern int err_report_mode; */
+/* Definitions and macros for error handling functions and error codes. */
 void	init_err(void);
-void	runtime_error(int);
+void	_runtime_error(int, bool);
+#define runtime_error_repeat(errnum)    _runtime_error(errnum, TRUE)
+#define runtime_error(errnum)           _runtime_error(errnum, FALSE)
 
 /* Error codes */
 #define ERR_TEXT_BUF_OVF 1	/* Text buffer overflow */

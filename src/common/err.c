@@ -28,6 +28,7 @@
 /* int err_report_mode = ERR_DEFAULT_REPORT_MODE; */
 
 static int error_count[ERR_NUM_ERRORS];
+static int error_repeat_count[ERR_NUM_ERRORS];
 
 static char *err_messages[] = {
 	"Text buffer overflow",
@@ -81,8 +82,11 @@ void init_err(void)
 	int i;
 
 	/* Initialize the counters. */
-	for (i = 0; i < ERR_NUM_ERRORS; i++)
-	error_count[i] = 0;
+	for (i = 0; i < ERR_NUM_ERRORS; i++) {
+		error_count[i] = 0;
+		error_repeat_count[i] = 0;
+	}
+
 } /* init_err */
 
 
@@ -95,7 +99,7 @@ void init_err(void)
  * errnum : Numeric code for error (1 to ERR_NUM_ERRORS)
  *
  */
-void runtime_error(int errnum)
+void _runtime_error(int errnum, bool repeat)
 {
 	int wasfirst;
 
@@ -110,17 +114,16 @@ void runtime_error(int errnum)
 	}
 
 	wasfirst = (error_count[errnum - 1] == 0);
+	error_count[errnum - 1]++;
 
-	if (!f_setup.err_report_repeat)
-		error_count[errnum - 1]++;
-	else {
+	if (repeat && error_repeat_count[errnum - 1] == 0) {
+		error_repeat_count[errnum - 1]++;
 		wasfirst = TRUE;
-		error_count[errnum - 1] = 0;
-		f_setup.err_report_repeat = 0;
 	}
 
 	if ((f_setup.err_report_mode == ERR_REPORT_ALWAYS)
 		|| (f_setup.err_report_mode == ERR_REPORT_ONCE && wasfirst)) {
+
 		long pc;
 
 		GET_PC (pc);

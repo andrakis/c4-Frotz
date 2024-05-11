@@ -162,8 +162,10 @@ void z_read(void)
 	zbyte c;
 	int i;
 
-	if (f_setup.err_report_repeat > 0)
-		runtime_error(f_setup.err_report_repeat);
+	if (f_setup.err_report_repeat > 0) {
+		runtime_error_repeat(f_setup.err_report_repeat);
+		f_setup.err_report_repeat = 0;
+	}
 
 	/* Supply default arguments */
 	if (zargc < 4)
@@ -249,6 +251,12 @@ void z_read(void)
 void z_read_char(void)
 {
 	zchar key;
+
+
+        if (f_setup.err_report_repeat > 0) {
+		runtime_error_repeat(f_setup.err_report_repeat);
+		f_setup.err_report_repeat = 0;
+	}
 
 	/* Supply default arguments */
 	if (zargc < 2)
