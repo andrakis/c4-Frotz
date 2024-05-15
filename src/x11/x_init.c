@@ -489,10 +489,6 @@ void os_init_screen(void)
 		z_header.flags |= SOUND_FLAG;
 #endif
 	}
-	if (z_header.version >= V6) {
-		z_header.config |= CONFIG_PICTURES;
-		z_header.flags &= ~MENU_FLAG;
-	}
 
 	if (z_header.version >= V5 && (z_header.flags & UNDO_FLAG)
 	    && f_setup.undo_slots == 0)
@@ -597,8 +593,15 @@ void os_init_screen(void)
 	}
 	bgpm = XCreatePixmap(dpy, main_window, X_WIDTH, X_HEIGHT, DefaultDepth(dpy,DefaultScreen(dpy)));
 	XSetWindowBackgroundPixmap(dpy, main_window, bgpm);
-	x_init_pictures();
 
+	/* Must be after screen dimensions are computed.  */
+	if (z_header.version >= V6) {
+		if (x_init_pictures()) {
+			z_header.config |= CONFIG_PICTURES;
+			z_header.flags &= ~MENU_FLAG;
+		} else
+			z_header.flags &= ~GRAPHICS_FLAG;
+	}
 } /* os_init_screen */
 
 

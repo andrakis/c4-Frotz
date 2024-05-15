@@ -65,6 +65,8 @@ bb_err_t x_blorb_init(char *filename)
 
 	bb_err_t blorb_err;
 
+	blorb_map = NULL;
+
 	if ((fp = fopen(filename, "rb")) == NULL)
 		return bb_err_Read;
 

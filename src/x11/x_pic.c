@@ -250,6 +250,8 @@ bool x_init_pictures (void)
 static int z_num_to_index(int n)
 {
 	int i;
+	if (pict_info == NULL)
+		return -1;
 	for (i = 0; i <= num_pictures; i++) {
 		if (pict_info[i].z_num == n)
 			return i;
@@ -726,7 +728,13 @@ static x_picture *cachefind(int n)
 pict_info_t *x_getpic(int num)
 {
 	pict_info_t *res;
+	int index;
+
+	if ((index = z_num_to_index(num)) == -1)
+		return NULL;
+
 	res = &pict_info[z_num_to_index(num)];
+
 	if (res->pixels)
 		return res;
 	if (x_loadpic(num, res))
@@ -898,7 +906,7 @@ int os_picture_data(int picture, int *height, int *width)
 	*height = 0;
 	*width = 0;
 
-	if (!pict_info)
+	if (pict_info == NULL || !pict_info)
 		return FALSE;
 	if ((index = z_num_to_index(picture)) == -1)
 		return FALSE;
