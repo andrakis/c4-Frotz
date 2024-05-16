@@ -192,6 +192,8 @@ bool unix_init_pictures (void)
 static int z_num_to_index(int n)
 {
 	int i;
+	if (pict_info == NULL)
+		return -1;
 	for (i = 0; i <= num_pictures; i++) {
 		if (pict_info[i].z_num == n)
 			return i;
@@ -216,7 +218,7 @@ int os_picture_data(int num, int *height, int *width)
 	*height = 0;
 	*width = 0;
 
-	if (!pict_info)
+	if (pict_info == NULL || !pict_info)
 		return FALSE;
 
 	if ((index = z_num_to_index(num)) == -1)
