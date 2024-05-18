@@ -132,6 +132,9 @@ bb_err_t gen_blorb_init(char *filename)
 		/* with resources in a separate Blorb file. */
 		blorb_fp = fp;
 		f_setup.use_blorb = 1;
+
+		/* Save the blorb file here for later reference. */
+		f_setup.blorb_file = strdup(mystring);
 	}
 
 	/* Create a Blorb map from this file.

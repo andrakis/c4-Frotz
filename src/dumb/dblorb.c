@@ -110,6 +110,9 @@ bb_err_t dumb_blorb_init(char *filename)
 		f_setup.use_blorb = 1;
 		if (f_setup.blorb_file == NULL && !quiet_mode)
 			printf("Found Blorb file named %s.\n", mystring);
+
+		/* Save the blorb file here for later reference. */
+		f_setup.blorb_file = strdup(mystring);
 	}
 
 	/* Create a Blorb map from this file.
