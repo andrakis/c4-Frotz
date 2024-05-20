@@ -21,6 +21,8 @@
 
 #include "sf_frotz.h"
 
+#ifndef NO_SOUND
+
 #include <stdarg.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -453,5 +455,56 @@ void sf_checksound(void)
 		}
 	}
 } /* sf_checksound */
+
+/*************************************/
+
+#else /* NO_SOUND */
+
+/* Dummy functions */
+
+static void finishaudio(void) {
+	/* Not implemented */
+}
+
+void os_init_sound(void)
+{
+	/* Not implemented */
+}
+
+int sf_initsound(void)
+	/* Not implemented */
+{
+
+void os_beep(int UNUSED (number))
+{
+	/* Not implemented */
+}
+
+void os_finish_with_sample(int number)
+{
+	/* Not implemented */
+}
+
+void os_prepare_sample(int UNUSED (number))
+{
+	/* Not implemented */
+}
+
+void os_start_sample(int number, int volume, int repeats, zword eos)
+{
+	/* Not implemented */
+}
+
+void os_stop_sample(int number)
+{
+	/* Not implemented */
+}
+
+void sf_checksound(void)
+{
+	/* Not implemented */
+}
+
+#endif /* NO_SOUND */
 
 /*************************************/
