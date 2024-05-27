@@ -287,6 +287,12 @@ export DESTDIR
 export PREFIX
 export PKGCONF
 
+export CURSES_DEFINE
+export SAMPLERATE
+export BUFFSIZE
+export DEFAULT_CONVERTER
+export USE_UTF8
+
 NAME = frotz
 VERSION = 2.55pre
 RELEASE_NOTES = "Development release."
@@ -323,7 +329,6 @@ BLORB_LIB = $(BLORB_DIR)/blorblib.a
 
 CURSES_DIR = $(SRCDIR)/curses
 CURSES_LIB = $(CURSES_DIR)/frotz_curses.a
-CURSES_DEFINES = $(CURSES_DIR)/ux_defines.h
 
 DUMB_DIR = $(SRCDIR)/dumb
 DUMB_LIB = $(DUMB_DIR)/frotz_dumb.a
@@ -402,7 +407,6 @@ $(FROTZ_BIN): $(FROTZ_LIBS)
 nosound: nosound_helper $(FROTZ_BIN) | nosound_helper
 nosound_helper:
 	$(eval SOUND_TYPE= none)
-	$(eval NO_SOUND= -DNO_SOUND)
 	$(eval CURSES_SOUND_LDFLAGS= )
 	$(eval CURSES_SOUND= disabled)
 
@@ -504,7 +508,7 @@ dos-lib:	$(DOS_LIB)
 $(COMMON_LIB): $(COMMON_DEFINES) $(HASH)
 	$(MAKE) -C $(COMMON_DIR)
 
-$(CURSES_LIB): $(COMMON_DEFINES) $(CURSES_DEFINES) $(HASH)
+$(CURSES_LIB): $(COMMON_DEFINES) $(HASH)
 	$(MAKE) -C $(CURSES_DIR)
 
 $(X11_LIB): $(COMMON_DEFINES) $(HASH)
@@ -637,49 +641,6 @@ endif
 	@echo "#endif /* COMMON_DEFINES_H */" >> $@
 endif
 
-curses-defines: curses_defines
-curses_defines: $(CURSES_DEFINES)
-$(CURSES_DEFINES):
-ifeq ($(wildcard $(CURSES_DEFINES)),)
-ifndef CURSES
-	@echo "** ERROR You need to pick a flavor of curses in the Makefile!"
-	exit 1
-endif
-ifeq ($(USE_UTF8), yes)
-ifneq ($(CURSES),ncursesw)
-ifndef MACOS
-	@echo "** ERROR UTF-8 support only works with ncursesw!"
-	exit 2
-endif
-endif
-endif
-	@echo "** Generating $@"
-	@echo "#ifndef CURSES_DEFINES_H" > $@
-	@echo "#define CURSES_DEFINES_H" >> $@
-	@echo "#define $(CURSES_DEFINE)" >> $@
-	@echo "#define CONFIG_DIR \"$(SYSCONFDIR)\"" >> $@
-	@echo "#define SOUND_TYPE \"$(SOUND_TYPE)\"" >> $@
-	@echo "#define SAMPLERATE $(SAMPLERATE)" >> $@
-	@echo "#define BUFFSIZE $(BUFFSIZE)" >> $@
-	@echo "#define DEFAULT_CONVERTER $(DEFAULT_CONVERTER)" >> $@
-ifeq ($(SOUND_TYPE), none)
-	@echo "#define NO_SOUND" >> $@
-endif
-ifndef SOUND_TYPE
-	@echo "#define NO_SOUND" >> $@
-endif
-ifdef COLOR
-	@echo "#define COLOR_SUPPORT" >> $@
-endif
-ifdef ITALIC
-	@echo "#define ITALIC_SUPPORT" >> $@
-endif
-ifeq ($(USE_UTF8), yes)
-	@echo "#define USE_UTF8" >> $@
-endif
-	@echo "#endif /* CURSES_DEFINES_H */" >> $@
-endif
-
 
 hash: $(HASH)
 $(HASH):
@@ -807,7 +768,7 @@ $(NAME)$(DOSVER).zip: dosdist $(DOS_BIN)
 
 clean: $(SUB_CLEAN)
 	rm -rf $(NAME)-$(VERSION)
-	rm -rf $(COMMON_DEFINES) $(CURSES_DEFINES) $(HASH)
+	rm -rf $(COMMON_DEFINES) $(HASH)
 	rm -f FROTZ.BAK FROTZ.EXE FROTZ.LIB FROTZ.DSK *.OBJ
 	rm -f FROTZ.MAP *.ERR
 	rm -f frotz.map *.err
@@ -849,7 +810,7 @@ help:
 
 .PHONY: all clean dist dosdist curses ncurses dumb sdl hash help snavig \
 	common_defines dosdefs curses_defines nosound nosound_helper \
-	$(COMMON_DEFINES) $(CURSES_DEFINES) $(HASH) \
+	$(COMMON_DEFINES) $(HASH) \
 	blorb_lib common_lib curses_lib dumb_lib \
 	install install_dfrotz install_sfrotz install_xfrotz $(SUB_CLEAN)
 	uninstall uninstall_dfrotz uninstall_sfrotz uninstall_xfrotz
