@@ -528,7 +528,8 @@ $(SUB_CLEAN):
 
 
 # Compile-time generated defines and strings
-#
+# Stuff common to all interfaces are generated here to allow for parallel
+# compilation to work without having to wait for the common module to finish.
 dosdefs: hash defs
 defs: common_defines
 common-defines: common_defines
@@ -543,7 +544,6 @@ ifeq ($(wildcard $(COMMON_DEFINES)),)
 ifeq ($(EXPORT_TYPE), dos)
 	@echo "#define MSDOS_16BIT" >> $@
 
-
 	@echo "/* Uncomment this to disable Blorb support. */" >> $@
 ifeq ($(DOS_NO_BLORB), yes)
 	@echo "#define NO_BLORB" >> $@
@@ -557,7 +557,6 @@ ifeq ($(DOS_NO_SOUND), yes)
 else
 	@echo "/* #define NO_SOUND */" >> $@
 endif
-
 
 	@echo "/* Uncomment this to disable graphics support. */" >> $@
 ifeq ($(DOS_NO_GRAPHICS), yes)
