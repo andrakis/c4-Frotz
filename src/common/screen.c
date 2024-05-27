@@ -1217,6 +1217,7 @@ void z_picture_data(void)
 {
 	zword pic = zargs[0];
 	zword table = zargs[1];
+	bool avail;
 
 	int height, width;
 	int i;
@@ -1226,7 +1227,7 @@ void z_picture_data(void)
 		f_setup.err_report_repeat = ERR_PICTURE_MISSING;
 	}
 
-	bool avail = os_picture_data(pic, &height, &width);
+	avail = os_picture_data(pic, &height, &width);
 
 	for (i = 0; mapper[i].story_id != UNKNOWN; i++)
 		if (story_id == mapper[i].story_id) {
