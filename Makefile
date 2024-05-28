@@ -279,6 +279,9 @@ export AR
 export RANLIB
 export SYSCONFDIR
 export SDL_CFLAGS
+export SDL_LDFLAGS
+export SDL_SOUND_CFLAGS
+export SDL_SOUND_LDFLAGS
 export COLOR
 export ITALIC
 export SOUND_TYPE
@@ -292,6 +295,9 @@ export SAMPLERATE
 export BUFFSIZE
 export DEFAULT_CONVERTER
 export USE_UTF8
+
+export SDL_PKGS
+export SDL_SOUND_PKGS
 
 NAME = frotz
 VERSION = 2.55pre
@@ -342,10 +348,14 @@ X11_LDFLAGS = `pkg-config $(X11_PKGS) --libs` -lm
 
 SDL_DIR = $(SRCDIR)/sdl
 SDL_LIB = $(SDL_DIR)/frotz_sdl.a
-export SDL_PKGS = libpng libjpeg sdl2 SDL2_mixer freetype2 zlib
+SDL_PKGS = libpng libjpeg sdl2 freetype2 zlib
+SDL_SOUND_PKGS = SDL2_mixer
 SDL_LDFLAGS += -lm
 ifneq ($(NO_PKGCONF), yes)
 SDL_LDFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --libs)
+SDL_CFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --cflags)
+SDL_SOUND_LDFLAGS += $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --libs)
+SDL_SOUND_CFLAGS += $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --cflags)
 endif
 
 SUBDIRS = $(COMMON_DIR) $(CURSES_DIR) $(X11_DIR) $(SDL_DIR) $(DUMB_DIR) $(BLORB_DIR) $(DOS_DIR) $(FONTS_DIR)
@@ -423,8 +433,16 @@ $(XFROTZ_BIN): $(XFROTZ_LIBS)
 
 sdl: $(SFROTZ_BIN)
 $(SFROTZ_BIN): $(SFROTZ_LIBS)
-	$(CC) $+ -o $@ $(LDFLAGS) $(SDL_LDFLAGS)
+	$(CC) $+ -o $@ $(LDFLAGS) $(SDL_LDFLAGS) $(SDL_SOUND_LDFLAGS)
 	@echo "** Done building Frotz with SDL interface."
+
+sdl_nosound: sdl_nosound_helper $(SFROTZ_BIN) | sdl_nosound_helper
+sdl_nosound_helper:
+	$(eval SOUND_TYPE= none)
+	$(eval SDL_SOUND_LDFLAGS= )
+	$(eval SDL_SOUND_CFLAGS= )
+	$(eval SDL_SOUND_PKGS= )
+
 
 owdos: $(DOS_BIN)
 $(DOS_BIN): $(COMMON_DEFINES) $(HASH)

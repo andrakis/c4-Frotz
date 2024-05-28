@@ -21,6 +21,9 @@
 
 #include "sf_frotz.h"
 
+int m_no_sound = 0;
+int m_frequency = 44100;
+
 #ifndef NO_SOUND
 
 #include <stdarg.h>
@@ -61,10 +64,8 @@ typedef struct EFFECT {
 static EFFECT *e_sfx = NULL;
 static EFFECT *e_mod = NULL;
 
-int SFaudiorunning = 0;
+static int SFaudiorunning = 0;
 volatile int end_of_sound_flag = 0;
-int m_no_sound = 0;
-int m_frequency = 44100;
 
 static int audio_rate, audio_channels;
 
@@ -462,18 +463,16 @@ void sf_checksound(void)
 
 /* Dummy functions */
 
-static void finishaudio(void) {
-	/* Not implemented */
-}
-
 void os_init_sound(void)
 {
 	/* Not implemented */
 }
 
 int sf_initsound(void)
-	/* Not implemented */
 {
+	/* Not implemented */
+	return 0;
+}
 
 void os_beep(int UNUSED (number))
 {
