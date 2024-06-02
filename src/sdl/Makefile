@@ -19,16 +19,12 @@ ARFLAGS = rc
 
 
 $(TARGET): $(DEFINES) $(OBJECTS) | $(DEFINES)
-#	$(AR) $(ARFLAGS) $(SDL_LDFLAGS) $(SDL_SOUND_LDFLAGS) $@ $?
 	$(AR) $(ARFLAGS) $@ $(OBJECTS)
 	$(RANLIB) $@
 	@echo "** Done with SDL interface."
 
 
-#%.o: override CFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) $(SDL_SOUND_PKGS) --cflags) $(SDL_CFLAGS)
-
 %.o: %.c
-#	$(CC) $(CFLAGS) -fPIC -fpic -o $@ -c $<
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) -fPIC -fpic -o $@ -c $<
 
 
