@@ -120,6 +120,16 @@ TEXT_BUFFER_SIZE = 512
 INPUT_BUFFER_SIZE = 200
 STACK_SIZE = 1024
 
+# If SDL2 is available, you most certainly will/should have pkgconf
+# available, but if not, these defaults should work;
+SDL_CFLAGS_DEF = -I/usr/include/libpng16 -I/usr/include/SDL2 \
+	-D_REENTRANT -I/usr/include/freetype2
+SDL_SOUND_CFLAGS_DEF = -I/usr/include/glib-2.0 -I/usr/include/opus \
+	-I/usr/include/dbus-1.0 -I/usr/include/libinstpatch-2 -pthread \
+	-D_REENTRANT -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600
+SDL_LDFLAGS_DEF = -lm -lpng16 -ljpeg -lSDL2 -lfreetype -lz
+SDL_SOUND_LDFLAGS_DEF = -lSDL2_mixer
+
 
 #########################################################################
 # This section is where Frotz is actually built.
@@ -270,6 +280,7 @@ CURSES_DEFINE = USE_NCURSES_H
 endif
 
 
+# Export variables to sub-Makefiles.
 export CC
 export CFLAGS
 export CURSES_CFLAGS
@@ -278,10 +289,6 @@ export MAKEFLAGS
 export AR
 export RANLIB
 export SYSCONFDIR
-export SDL_CFLAGS
-export SDL_LDFLAGS
-export SDL_SOUND_CFLAGS
-export SDL_SOUND_LDFLAGS
 export COLOR
 export ITALIC
 export SOUND_TYPE
@@ -289,6 +296,7 @@ export NO_SOUND
 export DESTDIR
 export PREFIX
 export PKGCONF
+export NO_PKGCONF
 
 export CURSES_DEFINE
 export SAMPLERATE
@@ -298,13 +306,22 @@ export USE_UTF8
 
 export SDL_PKGS
 export SDL_SOUND_PKGS
+export SDL_CFLAGS
+export SDL_LDFLAGS
+export SDL_SOUND_CFLAGS
+export SDL_SOUND_LDFLAGS
+export SDL_CFLAGS_DEF
+export SDL_SOUND_CFLAGS_DEF
+export SDL_LDFLAGS_DEF
+export SDL_SOUND_LDFLAGS_DEF
+
 
 NAME = frotz
 VERSION = 2.55pre
 RELEASE_NOTES = "Development release."
 
-# If we're working from git, we have access to proper variables. If
-# not, make it clear that we're working from a release.
+# If we're working from git, we have access to proper variables.
+# If not, make it clear that we're working from a release.
 #
 GIT_DIR ?= .git
 ifneq ($(and $(wildcard $(GIT_DIR)),$(shell which git)),)
@@ -351,12 +368,6 @@ SDL_LIB = $(SDL_DIR)/frotz_sdl.a
 SDL_PKGS = libpng libjpeg sdl2 freetype2 zlib
 SDL_SOUND_PKGS = SDL2_mixer
 SDL_LDFLAGS += -lm
-ifneq ($(NO_PKGCONF), yes)
-SDL_LDFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --libs)
-SDL_CFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --cflags)
-SDL_SOUND_LDFLAGS += $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --libs)
-SDL_SOUND_CFLAGS += $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --cflags)
-endif
 
 SUBDIRS = $(COMMON_DIR) $(CURSES_DIR) $(X11_DIR) $(SDL_DIR) $(DUMB_DIR) $(BLORB_DIR) $(DOS_DIR) $(FONTS_DIR)
 SUB_CLEAN = $(SUBDIRS:%=%-clean)
@@ -433,6 +444,13 @@ $(XFROTZ_BIN): $(XFROTZ_LIBS)
 
 sdl: $(SFROTZ_BIN)
 $(SFROTZ_BIN): $(SFROTZ_LIBS)
+ifneq ($(NO_PKGCONF), yes)
+	$(eval SDL_LDFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --libs))
+	$(eval SDL_SOUND_LDFLAGS = $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --libs))
+else
+	$(eval SDL_LDFLAGS += $(SDL_LDFLAGS_DEF))
+	$(eval SDL_SOUND_LDFLAGS += $(SDL_SOUND_LDFLAGS_DEF))
+endif
 	$(CC) $+ -o $@ $(LDFLAGS) $(SDL_LDFLAGS) $(SDL_SOUND_LDFLAGS)
 	@echo "** Done building Frotz with SDL interface."
 
