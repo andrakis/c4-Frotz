@@ -67,11 +67,11 @@ ITALIC ?= yes
 #CURSES ?= ncurses
 CURSES ?= ncursesw
 
-# This Makefile uses the pkg-config utility to get information on
+# This Makefile uses the pkgconf utility to get information on
 # installed libraries.  If your system is missing that utility and
-# cannot install it for whatever reason (usually very old ones), you
+# cannot install it for whatever reason (usually very old systems), you
 # will need to uncomment and perhaps modify some of these lines.
-# I don't see any way around not having pkg-config for SDL.
+# I don't see any way around not having pkgconf for SDL.
 #CURSES_LDLAGS += -l$(CURSES) -ltinfo
 #CURSES_CFLAGS += -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600
 
@@ -361,7 +361,7 @@ DOS_DIR = $(SRCDIR)/dos
 X11_DIR = $(SRCDIR)/x11
 X11_LIB = $(X11_DIR)/frotz_x11.a
 export X11_PKGS = x11 xt libpng libjpeg zlib
-X11_LDFLAGS = `pkg-config $(X11_PKGS) --libs` -lm
+X11_LDFLAGS = `$(PKGCONF) $(X11_PKGS) --libs` -lm
 
 SDL_DIR = $(SRCDIR)/sdl
 SDL_LIB = $(SDL_DIR)/frotz_sdl.a
