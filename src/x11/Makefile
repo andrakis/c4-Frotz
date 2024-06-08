@@ -8,14 +8,16 @@ TARGET = frotz_x11.a
 
 ARFLAGS = rc
 
+ifneq ($(NO_PKGCONF), yes)
+X11_CFLAGS += $(shell $(PKGCONF) $(X11_PKGS) --cflags)
+else
+X11_CFLAGS += $(X11_CFLAGS_DEF)
+endif
+
 SOUND ?= ao
 
 CFLAGS += -DNO_SOUND
 CFLAGS += `$(PKGCONF) $(X11_PKGS) --cflags`
-
-.PHONY: clean
-.SUFFIXES: .c .o
-.DELETE_ON_ERROR:
 
 $(TARGET): $(OBJECTS) $(ZFONTSPCF)
 	$(AR) $(ARFLAGS) $@ $(OBJECTS)
@@ -27,4 +29,8 @@ clean:
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -fpic -o $@ -c $<
+
+.PHONY: clean
+.SUFFIXES: .c .o
+.DELETE_ON_ERROR:
 

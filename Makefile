@@ -130,6 +130,10 @@ SDL_SOUND_CFLAGS_DEF = -I/usr/include/glib-2.0 -I/usr/include/opus \
 SDL_LDFLAGS_DEF = -lm -lpng16 -ljpeg -lSDL2 -lfreetype -lz
 SDL_SOUND_LDFLAGS_DEF = -lSDL2_mixer
 
+# Here are some reasonable defaults for the the X11 interface.
+X11_CFLAGS_DEF = -I/usr/include/libpng16
+X11_LDFLAGS_DEF = -lXt -lX11 -lpng16 -ljpeg -lz -lm
+
 
 #########################################################################
 # This section is where Frotz is actually built.
@@ -182,7 +186,7 @@ PKGCONF = $(PKG_CONFIG_BIN)
 else
 # Neither pkgconf nor pkg-config found.
 $(warning *** Neither $(PKGCONF_BIN) nor $(PKG_CONFIG_BIN) are found!)
-$(warning *** Trying default configuration.  If these don't work,)
+$(warning *** Trying default configuration settings.  If these don't work,)
 $(warning *** check the configuration section of the main Makefile.)
 NO_PKGCONF = yes
 endif
@@ -315,6 +319,9 @@ export SDL_SOUND_CFLAGS_DEF
 export SDL_LDFLAGS_DEF
 export SDL_SOUND_LDFLAGS_DEF
 
+export X11_PKGS
+export X11_CFLAGS
+export X11_CFLAGS_DEF
 
 NAME = frotz
 VERSION = 2.55pre
@@ -360,8 +367,7 @@ DOS_DIR = $(SRCDIR)/dos
 
 X11_DIR = $(SRCDIR)/x11
 X11_LIB = $(X11_DIR)/frotz_x11.a
-export X11_PKGS = x11 xt libpng libjpeg zlib
-X11_LDFLAGS = `$(PKGCONF) $(X11_PKGS) --libs` -lm
+X11_PKGS = x11 xt libpng libjpeg zlib
 
 SDL_DIR = $(SRCDIR)/sdl
 SDL_LIB = $(SDL_DIR)/frotz_sdl.a
@@ -439,7 +445,12 @@ $(DFROTZ_BIN): $(DFROTZ_LIBS)
 
 x11: $(XFROTZ_BIN)
 $(XFROTZ_BIN): $(XFROTZ_LIBS)
-	$(CC) $+ -o $@ $(LDFLAGS) $(X11_LDFLAGS)
+ifneq ($(NO_PKGCONF), yes)
+	$(eval X11_LDFLAGS += $(shell $(PKGCONF) $(X11_PKGS) --libs))
+else
+	$(eval X11_LDFLAGS += $(X11_LDFLAGS_DEF))
+endif
+	$(CC) $+ -o $@ $(LDFLAGS) $(X11_LDFLAGS) -lm
 	@echo "** Done building Frotz with X11 interface."
 
 sdl: $(SFROTZ_BIN)
