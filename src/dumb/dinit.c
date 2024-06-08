@@ -366,7 +366,11 @@ FILE *os_load_story(void)
 
 	switch (dumb_blorb_init(f_setup.story_file)) {
 	case bb_err_NoBlorb:
-/*		printf("No blorb file found.\n\n"); */
+		/* printf("No blorb file found.\n\n"); */
+		if (f_setup.blorb_file != NULL) {
+			free(f_setup.blorb_file);
+			f_setup.blorb_file = NULL;
+		}
 		break;
 	case bb_err_Format:
 		printf("Blorb file loaded, but unable to build map.\n\n");
@@ -375,7 +379,7 @@ FILE *os_load_story(void)
 		printf("Blorb file loaded, but lacks executable chunk.\n\n");
 		break;
 	case bb_err_None:
-/*		printf("No blorb errors.\n\n"); */
+		/* printf("No blorb errors.\n\n"); */
 		break;
 	}
 

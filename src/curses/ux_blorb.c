@@ -88,13 +88,14 @@ bb_err_t ux_blorb_init(char *filename)
 	if (isblorb(fp)) {			/* Now we know to look */
 		f_setup.exec_in_blorb = 1;	/* for zcode in the blorb */
 		blorb_fp = fp;
-	} else {
+	} else { /* Not a Blorb.  This must be a ZCODE file. */
 		fclose(fp);
 		len1 = strlen(filename) + strlen(EXT_BLORB);
 		len2 = strlen(filename) + strlen(EXT_BLORB3);
 		if (f_setup.blorb_file != NULL)
 			mystring = strdup(f_setup.blorb_file);
 		else {
+			/* Determine default Blorb file name. */
 			mystring = malloc(MAX(len1, len2) * sizeof(char) + 1);
 			memcpy(mystring, filename, MAX(len1, len2) * sizeof(char));
 			p = strrchr(mystring, '.');

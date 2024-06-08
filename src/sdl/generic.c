@@ -96,16 +96,17 @@ bb_err_t gen_blorb_init(char *filename)
 	/* Is this really a Blorb file?  If not, maybe we're loading a naked
 	 * zcode file and our resources are in a separate blorb file.
 	 */
-	if (isblorb(fp)) { /* Now we know to look */
+	if (isblorb(fp)) {			/* Now we know to look */
 		f_setup.exec_in_blorb = 1;	/* for zcode in the blorb */
 		blorb_fp = fp;
-	} else {
+	} else { /* Not a Blorb.  This must be a ZCODE file. */
 		fclose(fp);
 		len1 = strlen(filename) + strlen(EXT_BLORB);
 		len2 = strlen(filename) + strlen(EXT_BLORB3);
 		if (f_setup.blorb_file != NULL)
 			mystring = strdup(f_setup.blorb_file);
 		else {
+			/* Determine default Blorb file name. */
 			mystring = malloc(MAX(len1, len2) * sizeof(char) + 1);
 			memcpy(mystring, filename, MAX(len1, len2) * sizeof(char));
 			p = strrchr(mystring, '.');
@@ -176,7 +177,11 @@ FILE *os_load_story(void)
 
 	switch (gen_blorb_init(f_setup.story_file)) {
 	case bb_err_NoBlorb:
-	/* printf("No blorb file found.\n\n"); */
+		/* printf("No blorb file found.\n\n"); */
+		if (f_setup.blorb_file != NULL) {
+			free(f_setup.blorb_file);
+			f_setup.blorb_file = NULL;
+		}
 		break;
 	case bb_err_Format:
 		printf("Blorb file loaded, but unable to build map.\n\n");
@@ -185,7 +190,7 @@ FILE *os_load_story(void)
 		printf("Blorb file loaded, but lacks executable chunk.\n\n");
 		break;
 	case bb_err_None:
-	/* printf("No blorb errors.\n\n"); */
+		/* printf("No blorb errors.\n\n"); */
 		break;
 	}
 
