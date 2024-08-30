@@ -153,6 +153,7 @@ bb_err_t gen_blorb_init(char *filename)
 		blorb_err = bb_load_chunk_by_type(blorb_map, bb_method_FilePos,
 						  &blorb_res, bb_ID_ZCOD, 0);
 		f_setup.exec_in_blorb = 1;
+		f_setup.blorb_file = strdup(f_setup.story_file);
 	}
 
 	return blorb_err;
@@ -178,10 +179,6 @@ FILE *os_load_story(void)
 	switch (gen_blorb_init(f_setup.story_file)) {
 	case bb_err_NoBlorb:
 		/* printf("No blorb file found.\n\n"); */
-		if (f_setup.blorb_file != NULL) {
-			free(f_setup.blorb_file);
-			f_setup.blorb_file = NULL;
-		}
 		break;
 	case bb_err_Format:
 		printf("Blorb file loaded, but unable to build map.\n\n");

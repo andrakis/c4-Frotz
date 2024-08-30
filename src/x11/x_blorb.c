@@ -133,6 +133,7 @@ bb_err_t x_blorb_init(char *filename)
 		blorb_err = bb_load_chunk_by_type(blorb_map, bb_method_FilePos,
 			&blorb_res, bb_ID_ZCOD, 0);
 		f_setup.exec_in_blorb = 1;
+		f_setup.blorb_file = strdup(f_setup.story_file);
 		/* printf("Found zcode chunk in Blorb file.\n"); */
 	}
 
