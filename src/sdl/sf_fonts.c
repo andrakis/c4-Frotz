@@ -750,7 +750,6 @@ void os_display_char(zchar c)
 		g = current.font->getglyph(current.font, c, 1);
 		if (g) {
 			sf_writeglyph(g);
-			m_exitPause = true;
 		}
 	}
 }

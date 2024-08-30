@@ -84,7 +84,6 @@ extern zlong m_defaultBack;
 extern zlong m_colours[11];
 extern zlong m_nonStdColours[NON_STD_COLS];
 extern int m_nonStdIndex;
-extern bool m_exitPause;
 extern bool m_lineInput;
 extern bool m_morePrompts;
 extern int AcWidth;

@@ -97,16 +97,14 @@ void os_reset_screen(void)
 {
 	sf_flushdisplay();
 
-	if (m_exitPause) {
-		const char *hit = sf_msgstring(IDS_HIT_KEY_EXIT);
-		os_set_font(TEXT_FONT);
-		os_set_text_style(0);
-		screen_new_line();
+	const char *hit = sf_msgstring(IDS_HIT_KEY_EXIT);
+	os_set_font(TEXT_FONT);
+	os_set_text_style(0);
+	screen_new_line();
 
-		while (*hit)
-			os_display_char((*hit++));
-		sf_read_key(0, true, false, false);
-	}
+	while (*hit)
+		os_display_char((*hit++));
+	sf_read_key(0, true, false, false);
 
 	sf_cleanup_all();
 } /* os_reset_screen */

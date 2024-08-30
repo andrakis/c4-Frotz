@@ -55,7 +55,6 @@ zlong m_defaultBack;
 zlong m_colours[11];
 zlong m_nonStdColours[NON_STD_COLS];
 int m_nonStdIndex;
-bool m_exitPause = 0;
 bool m_lineInput = 0;
 bool m_IsInfocomV6 = false;
 bool m_morePrompts = 1;

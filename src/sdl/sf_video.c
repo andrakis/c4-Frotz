@@ -1117,7 +1117,6 @@ zchar os_read_line(int max, zchar * buf, int timeout, int width, int continued)
 				}
 				if (is_terminator(c)) {
 					/* Terminate the current input */
-					m_exitPause = false;
 					sf_DrawInput(buf, pos, ptx, pty, width,
 						     false);
 
