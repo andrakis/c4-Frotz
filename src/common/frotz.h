@@ -205,6 +205,7 @@ extern const char build_timestamp[];
 #define EXT_BLORB4	".zblorb"
 #define EXT_COMMAND	".rec"
 #define EXT_AUX		".aux"
+#define EXT_LENGTH	7
 
 #ifndef DEFAULT_SAVE_NAME
 #define DEFAULT_SAVE_NAME "story.qzl"

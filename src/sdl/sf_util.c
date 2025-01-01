@@ -651,7 +651,8 @@ char *os_read_file_name(const char *default_name, int flag)
 {
 	int st;
 	const char *initname = default_name;
-	char file_name[FILENAME_MAX + 1];
+	char file_name[FILENAME_MAX + EXT_LENGTH + 1];
+	char *extension;
 
 	if (newfile(flag)) {
 		char *ext = getextension(flag);
@@ -670,7 +671,7 @@ char *os_read_file_name(const char *default_name, int flag)
 		if (strncmp(ext, EXT_AUX, 4)) {
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", default_name, EXT_AUX);
 			return NULL;
-		} else 
+		} else
 			strncpy(file_name, default_name, FILENAME_MAX);
 	} else if (f_setup.restore_mode) {
 		strncpy(file_name, f_setup.save_name, FILENAME_MAX);
@@ -681,8 +682,13 @@ char *os_read_file_name(const char *default_name, int flag)
 
 		if (!st)
 			return NULL;
-	}
 
+		/* Add ".qzl" filename extension if it's not there already. */
+		extension = strrchr(file_name, '.');
+		if (extension == NULL ||  (strncmp(extension, EXT_SAVE, EXT_LENGTH) != 0) ) {
+			strncat(file_name, EXT_SAVE, EXT_LENGTH);
+		}
+	}
 	return strdup(file_name);
 } /* os_read_file_name */
 
