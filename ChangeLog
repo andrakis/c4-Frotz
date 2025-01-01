@@ -18,6 +18,8 @@ NEW FEATURES
 
 BUG FIXES
 
+- Fixed a stray $ that breaks the frotz filename when specifying LDFLAGS.
+
 - Updated the fix for Beyond Zork's rotating mirror bug by now correctly
   detecting attempts to address an invalid object.
 
