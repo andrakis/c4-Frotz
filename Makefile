@@ -426,7 +426,7 @@ DOSVER = $(shell echo $(VERSION) | sed s/\\.//g)
 curses: $(FROTZ_BIN)
 ncurses: $(FROTZ_BIN)
 $(FROTZ_BIN): $(FROTZ_LIBS)
-	$(CC) $+ -o $@$ $(LDFLAGS) $(CURSES_LDFLAGS) $(CURSES_SOUND_LDFLAGS)
+	$(CC) $+ -o $@ $(LDFLAGS) $(CURSES_LDFLAGS) $(CURSES_SOUND_LDFLAGS)
 	@echo "** Done building Frotz with curses interface"
 	@echo "** Audio support $(CURSES_SOUND) (type $(SOUND_TYPE))"
 	@echo "** Blorb support $(BLORB_SUPPORT)"
