@@ -335,7 +335,11 @@ void z_test(void)
 #endif
 } /* z_test */
 
-
+/*
+ * If a short is more than 16 bits, just pretend it is.  So far, this
+ * makes sense only on PDP10 or "certain DSPs".
+ */
+#ifdef TOPS20
 short s16(zword z) {
 	short sz;
 	sz = (short) (z & 0xffff);
@@ -343,3 +347,4 @@ short s16(zword z) {
 		sz = - (65536 - sz );
 	return sz;
 } /* s16 */
+#endif
