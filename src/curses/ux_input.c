@@ -1051,24 +1051,24 @@ char *os_read_file_name (const char *default_name, int flag)
 		print_string ("\": ");
 #ifdef USE_UTF8
 		{
-			zchar z_name[FILENAME_MAX + 1];
+			zchar z_name[FILENAME_MAX - EXT_LENGTH + 1];
 			zchar *zp;
-			read_string (FILENAME_MAX, z_name);
+			read_string (FILENAME_MAX - EXT_LENGTH, z_name);
 			i = 0;
 			zp = z_name;
 			while (*zp) {
 				if(*zp <= 0x7f) {
-					if (i > FILENAME_MAX)
+					if (i > FILENAME_MAX - EXT_LENGTH)
 						break;
 					file_name[i++] = *zp;
 				} else if(*zp > 0x7ff) {
-					if (i > FILENAME_MAX - 2)
+					if (i > FILENAME_MAX - EXT_LENGTH- 2)
 						break;
 					file_name[i++] = 0xe0 | ((*zp >> 12) & 0xf);
 					file_name[i++] = 0x80 | ((*zp >> 6) & 0x3f);
 					file_name[i++] = 0x80 | (*zp & 0x3f);
 				} else {
-					if (i > FILENAME_MAX - 1)
+					if (i > FILENAME_MAX - EXT_LENGTH - 1)
 						break;
 					file_name[i++] = 0xc0 | ((*zp >> 6) & 0x1f);
 					file_name[i++] = 0x80 | (*zp & 0x3f);
@@ -1078,7 +1078,7 @@ char *os_read_file_name (const char *default_name, int flag)
 			file_name[i] = 0;
 		}
 #else
-		read_string (FILENAME_MAX, (zchar *)file_name);
+		read_string (FILENAME_MAX - EXT_LENGTH, (zchar *)file_name);
 #endif
 	}
 
@@ -1100,9 +1100,9 @@ char *os_read_file_name (const char *default_name, int flag)
 		/*   file access there. */
 		if (flag == FILE_NO_PROMPT && f_setup.restricted_path == NULL) {
 			tempname = basename((char *)default_name);
-			strncpy(file_name, tempname, FILENAME_MAX);
+			strncpy(file_name, tempname, FILENAME_MAX - EXT_LENGTH);
 		} else
-			strncpy (file_name, default_name, FILENAME_MAX);
+			strncpy (file_name, default_name, FILENAME_MAX - EXT_LENGTH);
 	}
 
 	/* If we're restricted to one directory, strip any leading path left
@@ -1119,11 +1119,11 @@ char *os_read_file_name (const char *default_name, int flag)
 			}
 		}
 		tempname = strdup(file_name + i);
-		strncpy(file_name, f_setup.restricted_path, FILENAME_MAX);
+		strncpy(file_name, f_setup.restricted_path, FILENAME_MAX - EXT_LENGTH);
 
 		/* Make sure the final character is the path separator. */
 		if (file_name[strlen(file_name)-1] != PATH_SEPARATOR) {
-			strncat(file_name, path_separator, FILENAME_MAX - strlen(file_name) - 2);
+			strncat(file_name, path_separator, FILENAME_MAX - EXT_LENGTH - strlen(file_name) - 2);
 		}
 		strncat(file_name, tempname, strlen(file_name) - strlen(tempname) - 1);
 	}
@@ -1133,6 +1133,16 @@ char *os_read_file_name (const char *default_name, int flag)
 		if (strncmp(ext, EXT_AUX, 4)) {
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", file_name, EXT_AUX);
 			return NULL;
+		}
+	}
+
+	/* For saving and restoring...
+	 * add ".qzl" filename extension if it's not there already.
+	 */
+	if (flag == FILE_SAVE || flag == FILE_RESTORE) {
+		ext = strrchr(file_name, '.');
+		if (ext == NULL || strncmp(ext, EXT_SAVE, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_SAVE, EXT_LENGTH);
 		}
 	}
 
