@@ -651,7 +651,7 @@ char *os_read_file_name(const char *default_name, int flag)
 {
 	int st;
 	const char *initname = default_name;
-	char file_name[FILENAME_MAX + EXT_LENGTH + 1];
+	char file_name[FILENAME_MAX + 1];
 	char *extension;
 
 	if (newfile(flag)) {
@@ -672,9 +672,9 @@ char *os_read_file_name(const char *default_name, int flag)
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", default_name, EXT_AUX);
 			return NULL;
 		} else
-			strncpy(file_name, default_name, FILENAME_MAX);
+			strncpy(file_name, default_name, FILENAME_MAX - EXT_LENGTH);
 	} else if (f_setup.restore_mode) {
-		strncpy(file_name, f_setup.save_name, FILENAME_MAX);
+		strncpy(file_name, f_setup.save_name, FILENAME_MAX - EXT_LENGTH);
 	} else {
 		st = dialog_read_file_name(file_name, initname, flag);
 		if (st == SF_NOTIMP)
