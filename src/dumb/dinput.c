@@ -590,6 +590,16 @@ char *os_read_file_name (const char *default_name, int flag)
 		strncat(file_name, tempname, strlen(file_name) - strlen(tempname) - 1);
 	}
 
+	/* For saving and restoring...
+	 * add ".qzl" filename extension if it's not there already.
+	 */
+	if (flag == FILE_SAVE || flag == FILE_RESTORE) {
+		ext = strrchr(file_name, '.');
+		if (ext == NULL || strncmp(ext, EXT_SAVE, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_SAVE, EXT_LENGTH);
+		}
+	}
+
 	/* Warn if overwriting a file.  */
 	if ((flag == FILE_SAVE || flag == FILE_SAVE_AUX || flag == FILE_RECORD)
 		&& ((fp = fopen(file_name, "rb")) != NULL)) {
