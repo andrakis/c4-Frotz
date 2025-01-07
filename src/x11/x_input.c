@@ -241,6 +241,7 @@ char *os_read_file_name(const char *default_name, int flag)
 	int saved_replay = istream_replay;
 	int saved_record = ostream_record;
 	char file_name[FILENAME_MAX + 1];
+	zchar read_name[FILENAME_MAX + 1];
 	int i;
 	char *tempname;
 	zchar answer[4];
@@ -261,7 +262,11 @@ char *os_read_file_name(const char *default_name, int flag)
 		print_string(default_name);
 		print_string("\": ");
 
-		read_string(MAX_FILE_NAME, (zchar *) file_name);
+		read_string(FILENAME_MAX - EXT_LENGTH, read_name);
+		for (i = 0; i <= FILENAME_MAX - EXT_LENGTH; i++) {
+			file_name[i] = translate_from_zscii(read_name[i]);
+			if (file_name[i] == 0) break;
+		}
 	}
 
 	/* Use the default name if nothing was typed */
@@ -300,7 +305,26 @@ char *os_read_file_name(const char *default_name, int flag)
 		strncat(file_name, tempname, strlen(file_name) - strlen(tempname) - 1);
 	}
 
-	if (flag == FILE_NO_PROMPT) {
+
+	/* Add appropriate filename extensions if not already there. */
+	ext = strrchr(file_name, '.');
+	if (flag == FILE_SAVE || flag == FILE_RESTORE) {
+		if (ext == NULL || strncmp(ext, EXT_SAVE, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_SAVE, EXT_LENGTH);
+		}
+	} else if (flag == FILE_SCRIPT) {
+		if (ext == NULL || strncmp(ext, EXT_SCRIPT, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_SCRIPT, EXT_LENGTH);
+		}
+	} else if (flag == FILE_SAVE_AUX || flag == FILE_LOAD_AUX) {
+		if (ext == NULL || strncmp(ext, EXT_AUX, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_AUX, EXT_LENGTH);
+		}
+	} else if (flag == FILE_RECORD || flag == FILE_PLAYBACK) {
+		if (ext == NULL || strncmp(ext, EXT_COMMAND, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_COMMAND, EXT_LENGTH);
+		}
+	} else if (flag == FILE_NO_PROMPT) {
 		ext = strrchr(file_name, '.');
 		if (strncmp(ext, EXT_AUX, 4)) {
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", file_name, EXT_AUX);
