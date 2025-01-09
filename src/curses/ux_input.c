@@ -1051,24 +1051,24 @@ char *os_read_file_name (const char *default_name, int flag)
 		print_string ("\": ");
 #ifdef USE_UTF8
 		{
-			zchar z_name[FILENAME_MAX - EXT_LENGTH + 1];
+			zchar z_name[FILENAME_MAX + 1];
 			zchar *zp;
 			read_string (FILENAME_MAX - EXT_LENGTH, z_name);
 			i = 0;
 			zp = z_name;
 			while (*zp) {
 				if(*zp <= 0x7f) {
-					if (i > FILENAME_MAX - EXT_LENGTH)
+					if (i > FILENAME_MAX)
 						break;
 					file_name[i++] = *zp;
 				} else if(*zp > 0x7ff) {
-					if (i > FILENAME_MAX - EXT_LENGTH- 2)
+					if (i > FILENAME_MAX - 2)
 						break;
 					file_name[i++] = 0xe0 | ((*zp >> 12) & 0xf);
 					file_name[i++] = 0x80 | ((*zp >> 6) & 0x3f);
 					file_name[i++] = 0x80 | (*zp & 0x3f);
 				} else {
-					if (i > FILENAME_MAX - EXT_LENGTH - 1)
+					if (i > FILENAME_MAX - 1)
 						break;
 					file_name[i++] = 0xc0 | ((*zp >> 6) & 0x1f);
 					file_name[i++] = 0x80 | (*zp & 0x3f);
@@ -1100,9 +1100,9 @@ char *os_read_file_name (const char *default_name, int flag)
 		/*   file access there. */
 		if (flag == FILE_NO_PROMPT && f_setup.restricted_path == NULL) {
 			tempname = basename((char *)default_name);
-			strncpy(file_name, tempname, FILENAME_MAX - EXT_LENGTH);
+			strncpy(file_name, tempname, FILENAME_MAX);
 		} else
-			strncpy (file_name, default_name, FILENAME_MAX - EXT_LENGTH);
+			strncpy (file_name, default_name, FILENAME_MAX);
 	}
 
 	/* If we're restricted to one directory, strip any leading path left
@@ -1119,30 +1119,39 @@ char *os_read_file_name (const char *default_name, int flag)
 			}
 		}
 		tempname = strdup(file_name + i);
-		strncpy(file_name, f_setup.restricted_path, FILENAME_MAX - EXT_LENGTH);
+		strncpy(file_name, f_setup.restricted_path, FILENAME_MAX);
 
 		/* Make sure the final character is the path separator. */
 		if (file_name[strlen(file_name)-1] != PATH_SEPARATOR) {
-			strncat(file_name, path_separator, FILENAME_MAX - EXT_LENGTH - strlen(file_name) - 2);
+			strncat(file_name, path_separator, FILENAME_MAX - strlen(file_name) - 2);
 		}
 		strncat(file_name, tempname, strlen(file_name) - strlen(tempname) - 1);
 	}
 
+	ext = strrchr(file_name, '.');
 	if (flag == FILE_NO_PROMPT) {
-		ext = strrchr(file_name, '.');
 		if (strncmp(ext, EXT_AUX, 4)) {
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", file_name, EXT_AUX);
 			return NULL;
 		}
 	}
 
-	/* For saving and restoring...
-	 * add ".qzl" filename extension if it's not there already.
-	 */
+	/* Add appropriate filename extensions if not already there. */
 	if (flag == FILE_SAVE || flag == FILE_RESTORE) {
-		ext = strrchr(file_name, '.');
 		if (ext == NULL || strncmp(ext, EXT_SAVE, EXT_LENGTH) != 0) {
 			strncat(file_name, EXT_SAVE, EXT_LENGTH);
+		}
+	} else if (flag == FILE_SCRIPT) {
+		if (ext == NULL || strncmp(ext, EXT_SCRIPT, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_SCRIPT, EXT_LENGTH);
+		}
+	} else if (flag == FILE_SAVE_AUX || flag == FILE_LOAD_AUX) {
+		 if (ext == NULL || strncmp(ext, EXT_AUX, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_AUX, EXT_LENGTH);
+		}
+	} else if (flag == FILE_RECORD || flag == FILE_PLAYBACK) {
+		if (ext == NULL || strncmp(ext, EXT_COMMAND, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_COMMAND, EXT_LENGTH);
 		}
 	}
 
