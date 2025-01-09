@@ -652,14 +652,14 @@ char *os_read_file_name(const char *default_name, int flag)
 	int st;
 	const char *initname = default_name;
 	char file_name[FILENAME_MAX + 1];
-	char *extension;
+	char *ext;
 
 	if (newfile(flag)) {
-		char *ext = getextension(flag);
+		char *flag_ext = getextension(flag);
 		if (m_names_format == 'd')
-			initname = getdatename(initname, ext);
+			initname = getdatename(initname, flag_ext);
 		else if (m_names_format == 'n')
-			initname = getnumbername(initname, ext);
+			initname = getnumbername(initname, flag_ext);
 	}
 
 	/* If we're restoring a game before the interpreter starts,
@@ -672,9 +672,9 @@ char *os_read_file_name(const char *default_name, int flag)
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", default_name, EXT_AUX);
 			return NULL;
 		} else
-			strncpy(file_name, default_name, FILENAME_MAX - EXT_LENGTH);
+			strncpy(file_name, default_name, FILENAME_MAX);
 	} else if (f_setup.restore_mode) {
-		strncpy(file_name, f_setup.save_name, FILENAME_MAX - EXT_LENGTH);
+		strncpy(file_name, f_setup.save_name, FILENAME_MAX);
 	} else {
 		st = dialog_read_file_name(file_name, initname, flag);
 		if (st == SF_NOTIMP)
@@ -683,10 +683,24 @@ char *os_read_file_name(const char *default_name, int flag)
 		if (!st)
 			return NULL;
 
-		/* Add ".qzl" filename extension if it's not there already. */
-		extension = strrchr(file_name, '.');
-		if (extension == NULL ||  (strncmp(extension, EXT_SAVE, EXT_LENGTH) != 0) ) {
-			strncat(file_name, EXT_SAVE, EXT_LENGTH);
+		/* Add appropriate filename extensions if not already there. */
+		ext = strrchr(file_name, '.');
+		if (flag == FILE_SAVE || flag == FILE_RESTORE) {
+			if (ext == NULL ||  (strncmp(ext, EXT_SAVE, EXT_LENGTH) != 0) ) {
+				strncat(file_name, EXT_SAVE, EXT_LENGTH);
+			}
+		} else if (flag == FILE_SCRIPT) {
+			if (ext == NULL || strncmp(ext, EXT_SCRIPT, EXT_LENGTH) != 0) {
+				strncat(file_name, EXT_SCRIPT, EXT_LENGTH);
+			}
+		} else if (flag == FILE_SAVE_AUX || flag == FILE_LOAD_AUX) {
+			if (ext == NULL || strncmp(ext, EXT_AUX, EXT_LENGTH) != 0) {
+				strncat(file_name, EXT_AUX, EXT_LENGTH);
+			}
+		} else if (flag == FILE_RECORD || flag == FILE_PLAYBACK) {
+			if (ext == NULL || strncmp(ext, EXT_COMMAND, EXT_LENGTH) != 0) {
+				strncat(file_name, EXT_COMMAND, EXT_LENGTH);
+			}
 		}
 	}
 	return strdup(file_name);
@@ -723,21 +737,21 @@ static int ingame_read_file_name(char *file_name, const char *default_name,
 		zchar z_name[FILENAME_MAX + 1];
 		zchar *zp;
 		int i = 0;
-		read_string(FILENAME_MAX - 4, z_name);
+		read_string(FILENAME_MAX - EXT_LENGTH - 4, z_name);
 		zp = z_name;
 		while (*zp) {
 			if (*zp <= 0x7f) {
-				if (i > FILENAME_MAX - 4)
+				if (i > FILENAME_MAX - EXT_LENGTH - 4)
 					break;
 				file_name[i++] = *zp;
 			} else if (*zp > 0x7ff) {
-				if (i > FILENAME_MAX - 6)
+				if (i > FILENAME_MAX - EXT_LENGTH - 6)
 					break;
 				file_name[i++] = 0xe0 | ((*zp >> 12) & 0xf);
 				file_name[i++] = 0x80 | ((*zp >> 6) & 0x3f);
 				file_name[i++] = 0x80 | (*zp & 0x3f);
 			} else {
-				if (i > FILENAME_MAX - 5)
+				if (i > FILENAME_MAX - EXT_LENGTH - 5)
 					break;
 				file_name[i++] = 0xc0 | ((*zp >> 6) & 0x1f);
 				file_name[i++] = 0x80 | (*zp & 0x3f);
@@ -747,7 +761,7 @@ static int ingame_read_file_name(char *file_name, const char *default_name,
 		file_name[i] = 0;
 	}
 #else
-	read_string(MAX_FILE_NAME - 4, (zchar *) file_name);
+	read_string(MAX_FILE_NAME - EXT_LENGTH - 4, (zchar *) file_name);
 #endif
 
 	/* Use the default name if nothing was typed */
@@ -835,7 +849,7 @@ static int dialog_read_file_name(char *file_name, const char *default_name,
 	if (st == SF_NOTIMP)
 		return st;
 	if (st == 0) {
-		strncpy(file_name, res, MAX_FILE_NAME);
+		strncpy(file_name, res, MAX_FILE_NAME - EXT_LENGTH);
 		file_name[MAX_FILE_NAME - 1] = 0;
 		return 1;
 	}
