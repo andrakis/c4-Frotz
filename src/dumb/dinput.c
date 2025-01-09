@@ -544,10 +544,12 @@ char *os_read_file_name (const char *default_name, int flag)
 		ext = strrchr(default_name, '.');
 		if (strncmp(ext, EXT_AUX, 4)) {
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", default_name, EXT_AUX);
+			free(ext);
 			return NULL;
 		}
+		free(ext);
 		if (f_setup.restricted_path == NULL)
-			buf = strndup(default_name, MAX_FILE_NAME);
+			buf = strndup(default_name, MAX_FILE_NAME - EXT_LENGTH);
 		else
 			buf = basename((char *)default_name);
 	} else {
@@ -590,13 +592,23 @@ char *os_read_file_name (const char *default_name, int flag)
 		strncat(file_name, tempname, strlen(file_name) - strlen(tempname) - 1);
 	}
 
-	/* For saving and restoring...
-	 * add ".qzl" filename extension if it's not there already.
-	 */
+	/* Add appropriate filename extensions if not already there. */
+	ext = strrchr(file_name, '.');
 	if (flag == FILE_SAVE || flag == FILE_RESTORE) {
-		ext = strrchr(file_name, '.');
 		if (ext == NULL || strncmp(ext, EXT_SAVE, EXT_LENGTH) != 0) {
 			strncat(file_name, EXT_SAVE, EXT_LENGTH);
+		}
+	} else if (flag == FILE_SCRIPT) {
+		if (ext == NULL || strncmp(ext, EXT_SCRIPT, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_SCRIPT, EXT_LENGTH);
+		}
+	} else if (flag == FILE_SAVE_AUX || flag == FILE_LOAD_AUX) {
+		if (ext == NULL || strncmp(ext, EXT_AUX, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_AUX, EXT_LENGTH);
+		}
+	} else if (flag == FILE_RECORD || flag == FILE_PLAYBACK) {
+		if (ext == NULL || strncmp(ext, EXT_COMMAND, EXT_LENGTH) != 0) {
+			strncat(file_name, EXT_COMMAND, EXT_LENGTH);
 		}
 	}
 
