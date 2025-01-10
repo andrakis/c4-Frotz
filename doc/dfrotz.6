@@ -1,5 +1,5 @@
 .\" -*- nroff -*-
-.TH DFROTZ "6" "2021-06-21" "Dumb Frotz v2.54"
+.TH DFROTZ "6" "2025-01-11" "Dumb Frotz v2.55"
 .SH NAME
 dfrotz \- interpreter for Infocom and other Z-Machine games (dumb interface)
 
@@ -42,7 +42,8 @@ is a Z-Machine interpreter.  The Z-machine is a virtual machine designed
 by Infocom to run all of their text adventures.  It went through multiple
 revisions during the lifetime of the company, and two further revisions
 (V7 and V8) were created by Graham Nelson after the company's demise.
-The specification is now quite well documented; this version of Frotz
+The specification is now quite well documented; this version of
+.B Frotz
 supports version 1.1.  See
 .B Z-MACHINE STANDARDS
 below.
@@ -54,9 +55,12 @@ Version 6 is semi-supported by displaying the outlines of V6 graphics
 with the picture number in the bottom-right corner.
 
 .P
-This manpage is for Frotz with the dumb interface.  Dumb Frotz does not
-support sound-effects, graphics, colors, or even screen-handling (for
-instance,
+This manpage is for
+.B Frotz
+with the dumb interface.
+.B Dumb Frotz
+does not support sound-effects, graphics, colors, or even
+screen-handling (for instance,
 .BR curses (3)).
 Its purpose is to provide a Z-machine interpreter with the absolute
 minimum system requirements or for applications where those features are
@@ -73,16 +77,18 @@ Watch attribute testing.  Every time the Z-machine tests an attribute
 value, the test and the result will be reported.
 .TP
 .B \-f [irc | ansi | normal]
-Select type of format codes.  Dumb Frotz can optionally mark up its
-output with codes for color, bold, underline, and so on.  Currently,
-formatting codes for
+Select type of format codes.
+.B Dumb Frotz
+can optionally mark up its output with codes for color, bold, underline,
+and so on.  Currently, formatting codes for
 .B irc
 clients and
 .B ansi
 terminals are supported.  Specifying
 .B normal
-or not using this flag at all will result in Dumb Frotz's normal
-behavior of not using any sort of markup.
+or not using this flag at all will result in
+.B Dumb Frotz's
+normal behavior of not using any sort of markup.
 .TP
 .B \-h N
 Text height.  Every N lines, a MORE prompt will be printed.  Use of
@@ -145,18 +151,22 @@ below.  There is no need to prepend a backslash.
 .TP
 .B \-R <path>
 Restricted read/write.  Reading and writing files will be restricted
-only to the provided path. Ordinarily Frotz will write or read its
-saves, transcripts, and move recordings in whatever path or directory
-the user provides when the
+only to the provided path. Ordinarily
+.B Frotz
+will write or read its saves, transcripts, and move recordings in
+whatever path or directory the user provides when the
 .B SAVE,
 .B SCRIPT,
 or
 .B RECORDING
-commands are given.  This can be undesirable if Frotz is run in a
-restricted environment, by a front end, or by a chatbot.  This option will
-cause Frotz to write or read only to the provided path and nowhere else.
-Then the controlling process can then watch that directory for changes
-and need not worry about someone scribbling or snooping who-knows-where.
+commands are given.  This can be undesirable if
+.B Frotz
+is run in a restricted environment, by a front end, or by a chatbot.
+This option will cause
+.B Frotz
+to write or read only to the provided path and nowhere else. Then the
+controlling process can then watch that directory for changes and need
+not worry about someone scribbling or snooping who-knows-where.
 .TP
 .B \-s N
 Set the random number seed value.  The given seed value is used as the
@@ -182,10 +192,11 @@ Zork I pretends not to have sequels, and Witness has its language
 toned down.
 .TP
 .B \-u N
-Sets the number of slots available for Frotz's multiple undo hotkey (see
-below).  This defaults to twenty, which should be sufficient for most
-purposes.  Setting too high a number here may be dangerous on machines
-with limited memory.
+Sets the number of slots available for
+.B Frotz's
+multiple undo hotkey (see below).  This defaults to twenty, which should
+be sufficient for most purposes.  Setting too high a number here may be
+dangerous on machines with limited memory.
 .TP
 .B \-w N
 Manually sets the text width.  This should not be necessary except in
@@ -199,8 +210,9 @@ caution: A few games might use "g", "x" or "z" for different purposes.
 .TP
 .B \-v
 Show version information and exit.  This will display the version of
-Frotz, some information about what's enabled and what's not, the commit
-date of the source code, and a
+.B Frotz,
+some information about what's enabled and what's not, the commit date of
+the source code, and a
 .BR git (1)
 hash of that commit.
 .TP
@@ -220,9 +232,10 @@ Default is 1 (report first instance of an error).
 .SH INTERPRETER NUMBER
 The interpreter number is a setting in the Z-machine header which is
 used to tell the game on what sort of machine the interpreter is
-running. Frotz will automatically choose the most appropriate number for
-a given Infocom-produced game.  Should you want to override the number,
-the
+running.
+.B Frotz
+will automatically choose the most appropriate number for a given
+Infocom-produced game.  Should you want to override the number, the
 .B \-I
 option is available.
 .P
@@ -505,7 +518,9 @@ does not search any path for game files.
 
 .SH FURTHER INFORMATION
 .PP
-The Frotz homepage is at https://661.org/proj/if/frotz/.
+The
+.B Frotz
+homepage is at https://661.org/proj/if/frotz/.
 .PP
 A
 .BR git (1)
@@ -516,10 +531,12 @@ is available for public perusal at
 .PP
 The Interactive Fiction Archive, at
 .BR https://www.ifarchive.org/ ,
-is a good place to find games to play with Frotz.  To play Infocom's
-games that use graphics or sound, you'll need to get corresponding Blorb
-files from there.  Various ports and builds for Frotz may also be found
-at the IF Archive.
+is a good place to find games to play with
+.B Frotz.
+To play Infocom's games that use graphics or sound, you'll need to get
+corresponding Blorb files from there.  Various ports and builds for
+.B Frotz
+may also be found at the IF Archive.
 .PP
 Most distributions of Linux and BSD include
 .B Frotz
@@ -542,12 +559,15 @@ It assumes that once the text height and width are set, they will never
 change; even across saves.  This made sense when 24x80 terminals were the
 norm and graphical user interfaces were mostly unknown.  I'm fairly sure
 there's a way around this problem, but for now, don't resize an xterm in
-which frotz is running.  Also, you should try to make sure the terminal
-on which you restore a saved game has the same dimensions as the one on
-which you saved the game.
+which
+.B Frotz
+is running.  Also, you should try to make sure the terminal on which you
+restore a saved game has the same dimensions as the one on which you
+saved the game.
 .P
 This manpage is not intended to tell users HOW to play interactive
-fiction.  Refer to the file HOW_TO_PLAY included in the Unix Frotz
+fiction.  Refer to the file HOW_TO_PLAY included in the
+.B Unix Frotz
 documentation or visit one of the following sites:
 .IP
 http://www.microheaven.com/ifguide/

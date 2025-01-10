@@ -1,5 +1,5 @@
 .\" -*- nroff -*-
-.TH FROTZ "6" "2021-06-21" "Frotz v2.54"
+.TH FROTZ "6" "2025-01-11" "Frotz v2.55"
 .SH NAME
 frotz \- interpreter for Infocom and other Z-Machine games
 
@@ -41,15 +41,17 @@ is a Z-Machine interpreter.  The Z-machine is a virtual machine designed
 by Infocom to run all of their text adventures.  It went through multiple
 revisions during the lifetime of the company, and two further revisions
 (V7 and V8) were created by Graham Nelson after the company's demise.
-The specification is now quite well documented; this version of Frotz
+The specification is now quite well documented; this version of
+.B Frotz
 supports version 1.1.  See
 .B Z-MACHINE STANDARDS
 below.
 .P
-This version of Frotz fully supports all these versions of the Z-Machine
-except for version 6.  Version 6 is semi-supported by displaying the
-outlines of V6 graphics with the picture number in the bottom-right
-corner.
+This version of
+.B Frotz
+fully supports all these versions of the Z-Machine except for version 6.
+Version 6 is semi-supported by displaying the outlines of V6 graphics
+with the picture number in the bottom-right corner.
 
 .SH OPTIONS
 .TP
@@ -73,10 +75,13 @@ option does nothing.
 .B \-c N
 Sets the number of context lines used.  By default, after a
 .RB ''[MORE]''
-prompt, and assuming there is enough output pending, Frotz will allow all
-the currently visible lines to scroll off the screen before prompting
-again.  This switch specifies how many lines of text Frotz will hold
-over and display at the top of the next screen.
+prompt, and assuming there is enough output pending,
+.B Frotz
+will allow all the currently visible lines to scroll off the screen
+before prompting again.  This switch specifies how many lines of text
+.B Frotz
+will hold over and display at the top of the next screen.
+
 .TP
 .B \-d
 Disable color.
@@ -111,7 +116,8 @@ option does nothing.
 .TP
 .B \-F
 Force color mode.  If you've disabled color in a config file and want to
-Frotz to display colors, use this.
+.B Frotz
+to display colors, use this.
 .TP
 .B \-h N
 Manually sets the text height.  Though most curses libraries are intelligent
@@ -170,27 +176,32 @@ opcode was never used by Infocom. This switch is really only useful for
 those who like to toy around with Z-code.
 .TP
 .B \-q
-Quiet.  Turns off sound effects.  Useful when running Frotz on a remote
-machine and you don't want to bother whoever's near the console with weird
-noises.
+Quiet.  Turns off sound effects.  Useful when running
+.B Frotz
+on a remote machine and you don't want to bother whoever's near the
+console with weird noises.
 .TP
 .B \-r N
 Sets the right margin.
 .TP
 .B \-R <path>
 Restricted read/write.  Reading and writing files will be restricted
-only to the provided path. Ordinarily Frotz will write or read its
-saves, transcripts, and move recordings in whatever path or directory
-the user provides when the
+only to the provided path. Ordinarily
+.B Frotz
+will write or read its saves, transcripts, and move recordings in
+whatever path or directory the user provides when the
 .B SAVE,
 .B SCRIPT,
 or
 .B RECORDING
-commands are given.  This can be undesirable if Frotz is run in a
-restricted environment, by a front end, or by a chatbot.  This option will
-cause Frotz to write or read only to the provided path and nowhere else.
-Then the controlling process can then watch that directory for changes
-and need not worry about someone scribbling or snooping who-knows-where.
+commands are given.  This can be undesirable if
+.B Frotz
+is run in a restricted environment, by a front end, or by a chatbot.
+This option will cause
+.B Frotz
+to write or read only to the provided path and nowhere else. Then the
+controlling process can then watch that directory for changes and need
+not worry about someone scribbling or snooping who-knows-where.
 .TP
 .B \-s N
 Set the random number seed value.  The given seed value is used as the
@@ -210,10 +221,11 @@ Zork I pretends not to have sequels, and Witness has its language
 toned down.
 .TP
 .B \-u N
-Sets the number of slots available for Frotz's multiple undo hotkey (see
-below).  This defaults to 25, which should be sufficient for most
-purposes.  Setting too high a number here may be dangerous on machines
-with limited memory.
+Sets the number of slots available for
+.B Frotz's
+multiple undo hotkey (see below).  This defaults to 25, which should be
+sufficient for most purposes.  Setting too high a number here may be
+dangerous on machines with limited memory.
 .TP
 .B \-w N
 Manually sets the text width.
@@ -226,8 +238,9 @@ caution: A few games might use "g", "x" or "z" for different purposes.
 .TP
 .B \-v
 Show version information and exit.  This will display the version of
-Frotz, some information about what's enabled and what's not, the commit
-date of the source code, and a
+.B Frotz,
+some information about what's enabled and what's not, the commit date of
+the source code, and a
 .BR git (1)
 hash of that commit.
 .TP
@@ -324,7 +337,7 @@ Infocom used the following interpreter numbers:
 
 .SH CONFIGURATION FILES
 On startup,
-.B frotz
+.B Frotz
 will first check the system's frotz.conf then $HOME/.frotzrc for
 configuration information.  The configuration file uses a simple syntax
 of
@@ -444,10 +457,12 @@ variable.
 \ \ <integer>
 .br
 Set the number of context lines used.  By default, after a ``[MORE]''
-prompt, and assuming there is enough output pending, frotz will allow all
-the currently visible lines to scroll off the screen before prompting
-again.  This switch specifies how many lines of text frotz will hold over
-and display at the top of the next screen.  Default is "0".
+prompt, and assuming there is enough output pending,
+.B Frotz
+will allow all the currently visible lines to scroll off the screen
+before prompting again.  This switch specifies how many lines of text
+.B Frotz
+will hold over and display at the top of the next screen.  Default is "0".
 .PP
 .B left_margin
 \ \ <integer>
@@ -621,12 +636,13 @@ accesses.
 .SH ENVIRONMENT
 If the
 .B ZCODE_PATH
-environmental variable is defined, frotz will search that path for game
-files.  If that doesn't exist,
+environmental variable is defined,
+.B Frotz
+will search that path for game files.  If that doesn't exist,
 .B INFOCOM_PATH
 will be searched.  Any additional files required, such as auxilary, or
 blorb files must be in the same directory as
-.B frotz
+.B Frotz
 finds the story file.
 .P
 For the Alt key to be read correctly in an Xterm, the following lines
@@ -645,17 +661,20 @@ homepage is at
 .PP
 A
 .BR git (1)
-repository of all versions of Unix Frotz back to 2.32 to the bleeding
-edge is available for public perusal at
+repository of all versions of
+.B Unix Frotz
+back to 2.32 to the bleeding edge is available for public perusal at
 .br
 .B https://gitlab.com/DavidGriffith/frotz/.
 .PP
 The Interactive Fiction Archive, at
 .BR https://www.ifarchive.org/ ,
-is a good place to find games to play with Frotz.  To play Infocom's
-games that use graphics or sound, you'll need to get corresponding Blorb
-files from there.  Various ports and builds for Frotz may also be found
-at the IF Archive.
+is a good place to find games to play with
+.B Frotz.
+To play Infocom's games that use graphics or sound, you'll need to get
+corresponding Blorb files from there.  Various ports and builds for
+.B Frotz
+may also be found at the IF Archive.
 .PP
 Most distributions of Linux and BSD include
 .B Frotz
@@ -678,9 +697,11 @@ It assumes that once the text height and width are set, they will never
 change; even across saves.  This made sense when 24x80 terminals were the
 norm and graphical user interfaces were mostly unknown.  I'm fairly sure
 there's a way around this problem, but for now, don't resize an xterm in
-which frotz is running.  Also, you should try to make sure the terminal
-on which you restore a saved game has the same dimensions as the one on
-which you saved the game.
+which
+.B Frotz
+is running.  Also, you should try to make sure the terminal on which you
+restore a saved game has the same dimensions as the one on which you
+saved the game.
 .P
 Audio latency might be unreasonably long depending on the settings of
 your operating system.  Linux generally has things right.  The BSDs may
