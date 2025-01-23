@@ -29,6 +29,7 @@ src/common/defs.h
 src/dos/defs.h
 src/owdos/defs.h
 src/curses/ux_defines.h
+src/sdl/sf_defines.h
 *.z?
 *.blb
 *.blorb
