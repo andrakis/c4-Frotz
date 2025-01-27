@@ -18,6 +18,10 @@ NEW FEATURES
 
 BUG FIXES
 
+- Attempting to write a string that straddles the Z-machine's 64k
+  boundary caused a segfault within Frotz itself.  Frotz now will detect
+  this and throw a fatal error instead.
+
 - Fixed an oversight in which files created by Frotz aren't given appropriate
   filename extensions.
 

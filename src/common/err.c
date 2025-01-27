@@ -106,13 +106,6 @@ void _runtime_error(int errnum, bool repeat)
 	if (errnum <= 0 || errnum > ERR_NUM_ERRORS)
 		return;
 
-	if (f_setup.err_report_mode == ERR_REPORT_FATAL
-		|| errnum <= ERR_MAX_FATAL) {
-		flush_buffer ();
-		os_fatal (err_messages[errnum - 1]);
-		return;
-	}
-
 	wasfirst = (error_count[errnum - 1] == 0);
 	error_count[errnum - 1]++;
 
@@ -121,7 +114,11 @@ void _runtime_error(int errnum, bool repeat)
 		wasfirst = TRUE;
 	}
 
-	if ((f_setup.err_report_mode == ERR_REPORT_ALWAYS)
+
+	if (wasfirst && (f_setup.err_report_mode == ERR_REPORT_FATAL || errnum <= ERR_MAX_FATAL)) {
+		flush_buffer ();
+		os_fatal (err_messages[errnum - 1]);
+	} else if ((f_setup.err_report_mode == ERR_REPORT_ALWAYS)
 		|| (f_setup.err_report_mode == ERR_REPORT_ONCE && wasfirst)) {
 
 		long pc;
@@ -132,10 +129,12 @@ void _runtime_error(int errnum, bool repeat)
 		print_string (" (PC = ");
 		print_long (pc, 16);
 		print_char (')');
+	}
 
-		if (f_setup.err_report_mode == ERR_REPORT_ONCE) {
+	if (wasfirst) {
+		if (f_setup.err_report_mode == ERR_REPORT_ONCE)
 			print_string (" (will ignore further occurrences)");
-		} else {
+		else {
 			print_string (" (occurrence ");
 			print_long (error_count[errnum - 1], 10);
 			print_char (')');

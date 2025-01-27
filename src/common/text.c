@@ -387,7 +387,7 @@ void z_encode_text(void)
  *
  */
 #define outchar(c)	if (st==VOCABULARY) *ptr++=c; else print_char(c)
-static void decode_text(enum string_type st, zword addr)
+static void decode_text(enum string_type st, zword z_addr)
 {
 	zchar *ptr;
 	long byte_addr;
@@ -397,6 +397,9 @@ static void decode_text(enum string_type st, zword addr)
 	int shift_state = 0;
 	int shift_lock = 0;
 	int status = 0;
+
+	/* Deals with strings that cross the 64K boundary. */
+	zlong addr = (zlong) z_addr;
 
 	ptr = NULL;		/* makes compilers shut up */
 	byte_addr = 0;
@@ -428,6 +431,9 @@ static void decode_text(enum string_type st, zword addr)
 
 	do {
 		int i;
+
+		if (addr > 0xffff)
+			runtime_error(ERR_ILL_PRINT_ADDR);
 
 		/* Fetch the next 16bit word */
 		if (st == LOW_STRING || st == VOCABULARY) {
