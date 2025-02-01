@@ -796,10 +796,10 @@ bool os_picture_data(int picture, int *height, int *width)
 
 #else /* NO_GRAPHICS */
 
-bool init_pictures(void) {}
+bool init_pictures(void) { return FALSE; }
 void reset_pictures(void) {}
-int os_peek_colour(void) {}
+int os_peek_colour(void) { return current_bg; }
 void os_draw_picture(int picture, int y, int x) {}
-bool os_picture_data(int picture, int *height, int *width) {}
+bool os_picture_data(int picture, int *height, int *width) { return FALSE; }
 
 #endif
