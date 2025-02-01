@@ -71,7 +71,7 @@ endif
 clean:
 	rm -f $(TARGET) $(OBJECTS) $(DEFINES)
 
-%.o: %.c
+%.o: %.c $(DEFINES)
 	$(CC) $(CFLAGS) $(CURSES_CFLAGS) $(NO_SOUND) -fPIC -fpic -o $@ -c $<
 
 .PHONY: clean $(DEFINES)
