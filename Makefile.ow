@@ -28,8 +28,7 @@ WLIB = wlib
 RM = %erase
 
 BINNAME = frotz.exe
-
-VERSION = "2.55pre"
+VERSION = "2.55"
 
 # MS-DOS command.com and Unix sh have different shell quoting rules.  Try to
 # detect which one we are running under.
