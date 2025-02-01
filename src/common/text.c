@@ -437,7 +437,18 @@ static void decode_text(enum string_type st, zword z_addr)
 
 		/* Fetch the next 16bit word */
 		if (st == LOW_STRING || st == VOCABULARY) {
+
+		/* The LOW_WORD() macro for TurboC can't handle a zword
+		   passed as the address because that macro assumes the
+		   first parameter is a 16-bit value.  Maybe someday I'll
+		   find a clean way to rewrite that macro.  DG.
+		*/
+#if defined __TURBOC__
+			zword addr_clipped = (zword) addr;
+			LOW_WORD(addr_clipped, code)
+#else
 			LOW_WORD(addr, code)
+#endif
 			addr += 2;
 		} else if (st == HIGH_STRING || st == ABBREVIATION) {
 			HIGH_WORD(byte_addr, code)
