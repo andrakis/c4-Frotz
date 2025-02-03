@@ -65,7 +65,7 @@ extern void (*op2_opcodes[]) (void);
 extern void (*var_opcodes[]) (void);
 
 /* char save_name[MAX_FILE_NAME + 1] = DEFAULT_SAVE_NAME; */
-char auxilary_name[MAX_FILE_NAME + 1] = DEFAULT_AUXILARY_NAME;
+char auxiliary_name[MAX_FILE_NAME + 1] = DEFAULT_AUXILIARY_NAME;
 
 static FILE *story_fp = NULL;
 
@@ -861,14 +861,14 @@ void z_restore(void)
 				goto finished;
 		}
 
-		/* Open auxilary file */
+		/* Open auxiliary file */
 		if ((gfp = fopen (new_name, "rb")) == NULL)
 			goto finished;
 
-		/* Load auxilary file */
+		/* Load auxiliary file */
 		success = fread (zmp + zargs[0], 1, zargs[1], gfp);
 
-		/* Close auxilary file */
+		/* Close auxiliary file */
 		fclose (gfp);
 	} else {
 	/*
@@ -1100,14 +1100,14 @@ void z_save(void)
 				goto finished;
 		}
 
-		/* Open auxilary file */
+		/* Open auxiliary file */
 		if ((gfp = fopen(new_name, "wb")) == NULL)
 			goto finished;
 
-		/* Write auxilary file */
+		/* Write auxiliary file */
 		success = fwrite(zmp + zargs[0], zargs[1], 1, gfp);
 
-		/* Close auxilary file */
+		/* Close auxiliary file */
 		fclose(gfp);
 
 	} else {

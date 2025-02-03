@@ -216,8 +216,8 @@ extern const char build_timestamp[];
 #ifndef DEFAULT_COMMAND_NAME
 #define DEFAULT_COMMAND_NAME "story.rec"
 #endif
-#ifndef DEFAULT_AUXILARY_NAME
-#define DEFAULT_AUXILARY_NAME "story.aux"
+#ifndef DEFAULT_AUXILIARY_NAME
+#define DEFAULT_AUXILIARY_NAME "story.aux"
 #endif
 #ifndef DEFAULT_SAVE_DIR	/* DG */
 #define DEFAULT_SAVE_DIR ".frotz-saves"

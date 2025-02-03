@@ -975,8 +975,8 @@ zchar os_read_key (int timeout, int cursor)
  *    FILE_SCRIPT    - Transcript file
  *    FILE_RECORD    - Command file for recording
  *    FILE_PLAYBACK  - Command file for playback
- *    FILE_SAVE_AUX  - Save auxilary ("preferred settings") file
- *    FILE_LOAD_AUX  - Load auxilary ("preferred settings") file
+ *    FILE_SAVE_AUX  - Save auxiliary ("preferred settings") file
+ *    FILE_LOAD_AUX  - Load auxiliary ("preferred settings") file
  *    FILE_NO_PROMPT - Return file without prompting the user
  *
  * The length of the file name is limited by MAX_FILE_NAME. Ideally

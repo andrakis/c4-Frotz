@@ -72,7 +72,7 @@ static const char *progname = NULL;
 extern char script_name[];
 extern char command_name[];
 extern char save_name[];
-extern char auxilary_name[];
+extern char auxiliary_name[];
 
 int display = -1;
 
