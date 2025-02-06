@@ -40,14 +40,14 @@ Syntax: dfrotz [options] story-file [blorb file]\n\
   -h # screen height              \t -s # random number seed value\n\
   -i   ignore fatal errors        \t -S # transcript width\n\
   -I # interpreter number         \t -t   set Tandy bit\n\
-  -o   watch object movement      \t -u # slots for multiple undo\n\
-  -O   watch object locating      \t -v   show version information\n\
-  -L <file> load this save file   \t -w # screen width\n\
-  -m   turn off MORE prompts      \t -x   expand abbreviations g/x/z\n\
+  -o   watch object movement      \t -T   start transcript on startup\n\
+  -O   watch object locating      \t -u # slots for multiple undo\n\
+  -L <file> load this save file   \t -v   show version information\n\
+  -m   turn off MORE prompts      \t -w # screen width\n\
+  -n <file> set transcript filename\t -x   expand abbreviations g/x/z\n\
   -p   plain ASCII output only    \t -Z # error checking (see below)\n\
   -P   alter piracy opcode\n"
 
-  
 #define INFO2 "\
 Error checking: 0 none, 1 first only (default), 2 all, 3 exit after any error.\n\
 For more options and explanations, please read the manual page.\n\n\
@@ -81,7 +81,7 @@ void os_process_arguments(int argc, char *argv[])
 	quiet_mode = FALSE;
 	/* Parse the options */
 	do {
-		c = zgetopt(argc, argv, "aAf:h:iI:L:moOpPqr:R:s:S:tu:vw:xZ:");
+		c = zgetopt(argc, argv, "aAf:h:iI:L:mn:oOpPqr:R:s:S:tTu:vw:xZ:");
 		switch(c) {
 		case 'a':
 			f_setup.attribute_assignment = 1;
@@ -125,6 +125,9 @@ void os_process_arguments(int argc, char *argv[])
 		case 'm':
 			do_more_prompts = FALSE;
 			break;
+		case 'n':
+			f_setup.script_name_override = strdup(zoptarg);
+			break;
 		case 'o':
 			f_setup.object_movement = 1;
 			break;
@@ -154,6 +157,10 @@ void os_process_arguments(int argc, char *argv[])
 			break;
 		case 't':
 			f_setup.tandy = 1;
+			break;
+		case 'T':
+			printf("Starting transcript from the beginning.\n");
+			f_setup.script_now = 1;
 			break;
 		case 'u':
 			f_setup.undo_slots = atoi(zoptarg);
@@ -213,6 +220,10 @@ void os_process_arguments(int argc, char *argv[])
 			printf("This should not happen.\n");
 			break;
 		}
+
+		if (f_setup.script_now)
+			printf("Starting transcript from the beginning.\n");
+
 	}
 	if (f_setup.format == FORMAT_UNKNOWN || f_setup.format == FORMAT_DISABLED)
 		f_setup.format = FORMAT_NORMAL;

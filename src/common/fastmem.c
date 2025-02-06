@@ -264,6 +264,7 @@ void init_setup(void)
 	f_setup.story_name = NULL;
 	f_setup.story_base = NULL;
 	f_setup.script_name = NULL;
+	f_setup.script_name_override = NULL;
 	f_setup.command_name = NULL;
 	f_setup.save_name = NULL;
 	f_setup.tmp_save_name = NULL;

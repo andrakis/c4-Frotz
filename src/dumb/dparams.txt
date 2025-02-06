@@ -8,6 +8,7 @@
 -O   watch object locating
 -L <file> load this save file
 -m   turn off MORE prompts
+-n <file> set transcript filename
 -p   plain ASCII output only
 -P   alter piracy opcode
 -q   quiet mode (no startup messages)
@@ -16,6 +17,7 @@
 -s # random number seed value
 -S # transcript width
 -t   set Tandy bit
+-T   start transcript on startup
 -u # slots for multiple undo
 -v   show version information
 -w # screen width

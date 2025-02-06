@@ -31,6 +31,7 @@ typedef struct frotz_setup_struct {
 	int undo_slots;
 	int expand_abbreviations;
 	int script_cols;
+	int script_now;
 	int sound;
 	int quiet;
 	int bleep;
@@ -43,6 +44,7 @@ typedef struct frotz_setup_struct {
         char *story_name;
         char *story_base;
         char *script_name;
+	char *script_name_override;
         char *command_name;
         char *save_name;
         char *tmp_save_name;

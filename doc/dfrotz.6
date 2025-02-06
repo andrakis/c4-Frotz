@@ -118,6 +118,10 @@ When the game starts, load this saved game file.
 Turn off MORE prompts.  This can be desirable when using a printing
 terminal.
 .TP
+.B \-n <filename>
+Set transcript filename.  The default is the name of the Z-code file
+with an extension of ".scr".
+.TP
 .B \-o
 Watch object movement.  This option enables debugging messages from the
 interpreter which describe the moving of objects in the object tree.
@@ -140,6 +144,10 @@ opcode.  The
 .I @piracy
 opcode was never used by Infocom. This switch is really only useful for
 those who like to toy around with Z-code.
+.TP
+.B -T
+Start transcript on startup.  Use this to capture the entire game
+session without needing to use the SCRIPT command.
 .TP
 .B \-q
 Quiet mode.  Suppress startup messages such as "Loading zork1.z3".

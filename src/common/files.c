@@ -61,7 +61,7 @@ static FILE *pfp = NULL;
  * name in V5+.
  *
  */
-void script_open(void)
+void script_open(bool noprompt)
 {
 	static bool script_valid = FALSE;
 
@@ -69,13 +69,16 @@ void script_open(void)
 
 	z_header.flags &= ~SCRIPTING_FLAG;
 
-	if (z_header.version >= V5 || !script_valid) {
+	if ((z_header.version >= V5 || !script_valid)  && !noprompt)  {
 		new_name = os_read_file_name(f_setup.script_name, FILE_SCRIPT);
 		if (new_name == NULL)
 			goto done;
 		free(f_setup.script_name);
 		f_setup.script_name = strdup(new_name);
 	}
+
+	if (f_setup.script_name_override != NULL)
+		f_setup.script_name = strdup(f_setup.script_name_override);
 
 	/* Opening in "at" mode doesn't work for script_erase_input... */
 	if ((sfp = fopen (f_setup.script_name, "r+t")) != NULL ||

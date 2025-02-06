@@ -30,7 +30,7 @@ extern void memory_open(zword, zword, bool);
 extern void memory_close(void);
 extern void record_open(void);
 extern void record_close(void);
-extern void script_open(void);
+extern void script_open(bool);
 extern void script_close(void);
 
 extern void memory_word(const zchar *);
@@ -123,7 +123,7 @@ void z_output_stream(void)
 		break;
 	case 2:
 		if (!ostream_script)
-			script_open();
+			script_open(FALSE);
 		break;
 	case -2:
 		if (ostream_script)

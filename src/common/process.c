@@ -170,6 +170,8 @@ void (*ext_opcodes[0x1d])(void) = {
 };
 
 
+extern void script_open (bool);
+
 /*
  * init_process
  *
@@ -249,6 +251,10 @@ void interpret(void)
 		z_restore();
 		f_setup.restore_mode = 0;
 	}
+
+	/* If we're supposed to start a transcript from the start. */
+	if (f_setup.script_now == 1)
+		script_open(TRUE);
 
 	do {
 		zbyte opcode;
