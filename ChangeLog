@@ -1,3 +1,14 @@
+Summary of changes between Frotz 2.54 and Frotz 2.56:
+=====================================================
+
+Frotz 2.56 is currently in development.
+
+BUG FIXES
+
+- Fixed a problem that sometimes resulted in a failure to build the SDL
+  interface when doing a parallel build.
+
+
 Summary of changes between Frotz 2.54 and Frotz 2.55:
 =====================================================
 
