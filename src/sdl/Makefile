@@ -31,7 +31,7 @@ $(TARGET): $(DEFINES) $(OBJECTS) | $(DEFINES)
 	$(RANLIB) $@
 	@echo "** Done with SDL interface."
 
-%.o: %.c
+%.o: %.c $(DEFINES)
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) -fPIC -fpic -o $@ -c $<
 
 $(DEFINES):
