@@ -74,5 +74,5 @@ clean:
 %.o: %.c $(DEFINES)
 	$(CC) $(CFLAGS) $(CURSES_CFLAGS) $(NO_SOUND) -fPIC -fpic -o $@ -c $<
 
-.PHONY: clean $(DEFINES)
+.PHONY: clean
 .DELETE_ON_ERROR:
