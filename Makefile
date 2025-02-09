@@ -172,20 +172,22 @@ RANLIB ?= ranlib
 
 # Check to see if pkgconf or pkg-config is available.
 # Both are functionally identical with the name pkg-config being deprecated.
-PKGCONF_BIN ?= pkgconf
-PKG_CONFIG_BIN ?= pkg-config
-# If we don't have pkgconf", check if pkg-config is available.
-ifneq ($(shell which $(PKGCONF_BIN)),)
-PKGCONF = $(PKGCONF_BIN)
+PKG_CONFIG ?= pkgconf
+PKG_CONFIG_OLD ?= pkg-config
+
+# If we don't have pkgconf, check if pkg-config is available.
+ifneq ($(shell which $(PKG_CONFIG)),)
+PKG_CONFIG = $(PKG_CONFIG_OLD)
 else
-$(warning *** Could not find $(PKGCONF_BIN).  Is $(PKG_CONFIG_BIN) available?)
+$(warning *** Could not find $(PKG_CONFIG).  Is $(PKG_CONFIG_OLD) available?)
+
 # Check if pkg-config is available.
-ifneq ($(shell which $(PKG_CONFIG_BIN)),)
-$(warning *** Found $(PKG_CONFIG_BIN)!  Now proceeding normally.)
-PKGCONF = $(PKG_CONFIG_BIN)
+ifneq ($(shell which $(PKG_CONFIG_OLD)),)
+$(warning *** Found $(PKG_CONFIG_OLD)!  Now proceeding normally.)
+PKG_CONFIG = $(PKG_CONFIG_OLD)
 else
 # Neither pkgconf nor pkg-config found.
-$(warning *** Neither $(PKGCONF_BIN) nor $(PKG_CONFIG_BIN) are found!)
+$(warning *** Neither $(PKG_CONFIG) nor $(PKG_CONFIG_OLD) are found!)
 $(warning *** Trying default configuration settings.  If these don't work,)
 $(warning *** check the configuration section of the main Makefile.)
 NO_PKGCONF = yes
@@ -200,11 +202,11 @@ CURSES_LDFLAGS += -l$(CURSES)
 CURSES_CFLAGS += -D_DEFAULT_SOURCE
 else
 # if pkgconf has $(CURSES)
-ifeq ($(shell $(PKGCONF) --exists $(CURSES) && echo 0),0)
+ifeq ($(shell $(PKG_CONFIG) --exists $(CURSES) && echo 0),0)
 # use pkgconf $(CURSES) info
 PKGCONF_CURSES = yes
-CURSES_LDFLAGS += $(shell $(PKGCONF) $(CURSES) --libs)
-CURSES_CFLAGS += $(shell $(PKGCONF) $(CURSES) --cflags)
+CURSES_LDFLAGS += $(shell $(PKG_CONFIG) $(CURSES) --libs)
+CURSES_CFLAGS += $(shell $(PKG_CONFIG) $(CURSES) --cflags)
 else # Otherwise, try something obvious like before.
 CURSES_LDFLAGS += -l$(CURSES)
 CURSES_CFLAGS += -D_DEFAULT_SOURCE
@@ -299,7 +301,7 @@ export SOUND_TYPE
 export NO_SOUND
 export DESTDIR
 export PREFIX
-export PKGCONF
+export PKG_CONFIG
 export NO_PKGCONF
 
 export CURSES_DEFINE
@@ -447,7 +449,7 @@ $(DFROTZ_BIN): $(DFROTZ_LIBS)
 x11: $(XFROTZ_BIN)
 $(XFROTZ_BIN): $(XFROTZ_LIBS)
 ifneq ($(NO_PKGCONF), yes)
-	$(eval X11_LDFLAGS += $(shell $(PKGCONF) $(X11_PKGS) --libs))
+	$(eval X11_LDFLAGS += $(shell $(PKG_CONFIG) $(X11_PKGS) --libs))
 else
 	$(eval X11_LDFLAGS += $(X11_LDFLAGS_DEF))
 endif
@@ -457,8 +459,8 @@ endif
 sdl: $(SFROTZ_BIN)
 $(SFROTZ_BIN): $(SFROTZ_LIBS)
 ifneq ($(NO_PKGCONF), yes)
-	$(eval SDL_LDFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --libs))
-	$(eval SDL_SOUND_LDFLAGS = $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --libs))
+	$(eval SDL_LDFLAGS += $(shell $(PKG_CONFIG) $(SDL_PKGS) --libs))
+	$(eval SDL_SOUND_LDFLAGS = $(shell $(PKG_CONFIG) $(SDL_SOUND_PKGS) --libs))
 else
 	$(eval SDL_LDFLAGS += $(SDL_LDFLAGS_DEF))
 	$(eval SDL_SOUND_LDFLAGS += $(SDL_SOUND_LDFLAGS_DEF))

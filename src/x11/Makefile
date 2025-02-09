@@ -9,7 +9,7 @@ TARGET = frotz_x11.a
 ARFLAGS = rc
 
 ifneq ($(NO_PKGCONF), yes)
-X11_CFLAGS += $(shell $(PKGCONF) $(X11_PKGS) --cflags)
+X11_CFLAGS += $(shell $(PKG_CONFIG) $(X11_PKGS) --cflags)
 else
 X11_CFLAGS += $(X11_CFLAGS_DEF)
 endif
@@ -17,7 +17,7 @@ endif
 SOUND ?= ao
 
 CFLAGS += -DNO_SOUND
-CFLAGS += `$(PKGCONF) $(X11_PKGS) --cflags`
+CFLAGS += `$(PKG_CONFIG) $(X11_PKGS) --cflags`
 
 $(TARGET): $(OBJECTS) $(ZFONTSPCF)
 	$(AR) $(ARFLAGS) $@ $(OBJECTS)

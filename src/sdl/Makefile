@@ -18,8 +18,8 @@ TARGET = frotz_sdl.a
 ARFLAGS = rc
 
 ifneq ($(NO_PKGCONF), yes)
-SDL_CFLAGS += $(shell $(PKGCONF) $(SDL_PKGS) --cflags)
-SDL_SOUND_CFLAGS += $(shell $(PKGCONF) $(SDL_SOUND_PKGS) --cflags)
+SDL_CFLAGS += $(shell $(PKG_CONFIG) $(SDL_PKGS) --cflags)
+SDL_SOUND_CFLAGS += $(shell $(PKG_CONFIG) $(SDL_SOUND_PKGS) --cflags)
 else
 SDL_CFLAGS += $(SDL_CFLAGS_DEF)
 SD_SOUND_CFLAGS += $(SDL_SOUND_CFLAGS_DEF)
