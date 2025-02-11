@@ -18,8 +18,8 @@
 # truncated to 6 characters and case is no longer significant."
 #
 # So you need to map all the symbols in the header files, everything declared
-#  "extern" in the source files, and also make sure that your input file names
-#  are unambiguous.
+# "extern" in the source files, and also make sure that your input file names
+# are unambiguous.
 #
 # This script is heavily based on one by Adam Thornton for pulling in a
 # remote git repository of Dumb Frotz, processing it, and then emitting
