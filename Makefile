@@ -146,8 +146,8 @@ $(error Compilation on Windows not supported)
 endif
 
 # Determine what system we are on.
-RANLIB ?= $(shell which ranlib)
-AR ?= $(shell which ar)
+RANLIB ?= $(shell command -v ranlib)
+AR ?= $(shell command -v ar)
 # For now, assume !windows == unix.
 OS_TYPE ?= unix
 UNAME_S := $(shell uname -s)
@@ -176,13 +176,13 @@ PKG_CONFIG ?= pkgconf
 PKG_CONFIG_OLD ?= pkg-config
 
 # If we don't have pkgconf, check if pkg-config is available.
-ifneq ($(shell which $(PKG_CONFIG)),)
+ifneq ($(shell command -v $(PKG_CONFIG)),)
 PKG_CONFIG = $(PKG_CONFIG_OLD)
 else
 $(warning *** Could not find $(PKG_CONFIG).  Is $(PKG_CONFIG_OLD) available?)
 
 # Check if pkg-config is available.
-ifneq ($(shell which $(PKG_CONFIG_OLD)),)
+ifneq ($(shell command -v $(PKG_CONFIG_OLD)),)
 $(warning *** Found $(PKG_CONFIG_OLD)!  Now proceeding normally.)
 PKG_CONFIG = $(PKG_CONFIG_OLD)
 else
@@ -334,7 +334,7 @@ RELEASE_NOTES = "Development release."
 # If not, make it clear that we're working from a release.
 #
 GIT_DIR ?= .git
-ifneq ($(and $(wildcard $(GIT_DIR)),$(shell which git)),)
+ifneq ($(and $(wildcard $(GIT_DIR)),$(shell command -v git)),)
 GIT_HASH = $(shell git rev-parse HEAD)
 GIT_HASH_SHORT = $(shell git rev-parse --short=8 HEAD)
 GIT_DATE = $(shell git show -s --format=%ci)
@@ -478,7 +478,7 @@ sdl_nosound_helper:
 
 owdos: $(DOS_BIN)
 $(DOS_BIN): $(COMMON_DEFINES) $(HASH)
-ifneq ($(shell which wmake),)
+ifneq ($(shell command -v wmake),)
 	wmake -f Makefile.ow
 else
 	$(error wmake command not found.  Cannot make the DOS version)
@@ -788,7 +788,7 @@ uninstall_all:	uninstall_frotz uninstall_dfrotz uninstall_sfrotz uninstall_xfrot
 
 dist: $(NAME)-$(VERSION).tar.gz
 frotz-$(VERSION).tar.gz:
-ifneq ($(and $(wildcard $(GIT_DIR)),$(shell which git)),)
+ifneq ($(and $(wildcard $(GIT_DIR)),$(shell command -v git)),)
 	git archive --format=tgz --prefix $(NAME)-$(VERSION)/ HEAD -o $(NAME)-$(VERSION).tar.gz
 	@echo $(NAME)-$(VERSION).tar.gz created.
 else
