@@ -145,9 +145,16 @@ ifeq ($(OS),Windows_NT)
 $(error Compilation on Windows not supported)
 endif
 
+# Try to use "command -v" to locate executables.  If it's not present,
+# try to use "which".
+WHICH = "which"
+ifeq ($(shell command -v command 2>&1),command)
+WHICH = "command -v"
+endif
+
 # Determine what system we are on.
-RANLIB ?= $(shell command -v ranlib)
-AR ?= $(shell command -v ar)
+RANLIB ?= $(shell "$(WHICH)" ranlib)
+AR ?= $(shell "$(WHICH)" ar)
 # For now, assume !windows == unix.
 OS_TYPE ?= unix
 UNAME_S := $(shell uname -s)
@@ -176,13 +183,13 @@ PKG_CONFIG ?= pkgconf
 PKG_CONFIG_OLD ?= pkg-config
 
 # If we don't have pkgconf, check if pkg-config is available.
-ifneq ($(shell command -v $(PKG_CONFIG)),)
+ifneq ($(shell "$(WHICH)" $(PKG_CONFIG)),)
 PKG_CONFIG = $(PKG_CONFIG_OLD)
 else
 $(warning *** Could not find $(PKG_CONFIG).  Is $(PKG_CONFIG_OLD) available?)
 
 # Check if pkg-config is available.
-ifneq ($(shell command -v $(PKG_CONFIG_OLD)),)
+ifneq ($(shell "$(WHICH)" $(PKG_CONFIG_OLD)),)
 $(warning *** Found $(PKG_CONFIG_OLD)!  Now proceeding normally.)
 PKG_CONFIG = $(PKG_CONFIG_OLD)
 else
@@ -334,7 +341,7 @@ RELEASE_NOTES = "Development release."
 # If not, make it clear that we're working from a release.
 #
 GIT_DIR ?= .git
-ifneq ($(and $(wildcard $(GIT_DIR)),$(shell command -v git)),)
+ifneq ($(and $(wildcard $(GIT_DIR)),$(shell "$(WHICH)" git)),)
 GIT_HASH = $(shell git rev-parse HEAD)
 GIT_HASH_SHORT = $(shell git rev-parse --short=8 HEAD)
 GIT_DATE = $(shell git show -s --format=%ci)
@@ -478,7 +485,7 @@ sdl_nosound_helper:
 
 owdos: $(DOS_BIN)
 $(DOS_BIN): $(COMMON_DEFINES) $(HASH)
-ifneq ($(shell command -v wmake),)
+ifneq ($(shell "$(WHICH)" wmake),)
 	wmake -f Makefile.ow
 else
 	$(error wmake command not found.  Cannot make the DOS version)
@@ -788,7 +795,7 @@ uninstall_all:	uninstall_frotz uninstall_dfrotz uninstall_sfrotz uninstall_xfrot
 
 dist: $(NAME)-$(VERSION).tar.gz
 frotz-$(VERSION).tar.gz:
-ifneq ($(and $(wildcard $(GIT_DIR)),$(shell command -v git)),)
+ifneq ($(and $(wildcard $(GIT_DIR)),$(shell "$(WHICH)" git)),)
 	git archive --format=tgz --prefix $(NAME)-$(VERSION)/ HEAD -o $(NAME)-$(VERSION).tar.gz
 	@echo $(NAME)-$(VERSION).tar.gz created.
 else
