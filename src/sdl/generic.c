@@ -108,7 +108,7 @@ bb_err_t gen_blorb_init(char *filename)
 		else {
 			/* Determine default Blorb file name. */
 			mystring = malloc(MAX(len1, len2) * sizeof(char) + 1);
-			memcpy(mystring, filename, MAX(len1, len2) * sizeof(char));
+			memcpy(mystring, filename, strlen(filename) + 1);
 			p = strrchr(mystring, '.');
 			if (p != NULL)
 				*p = '\0';
