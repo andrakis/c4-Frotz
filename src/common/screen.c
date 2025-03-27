@@ -831,6 +831,7 @@ void restart_screen(void)
 		cwp->font_size = (font_height << 8) | font_width;
 		cwp->attribute = 8;
 	}
+	cwp = &wp[0];
 
 	/* Prepare lower/upper windows and status line */
 	wp[0].attribute = 15;
