@@ -877,6 +877,18 @@ void sf_initfonts(void)
 	SFONT *Norm, *Emph = NULL, *Bold = NULL, *Bemp = NULL;
 
 	norm = SF_defaultfont;
+	if (norm->minchar == 8192) {
+		/* Need byteswap */
+		zbyte *font = (zbyte *)SF_defaultfont;
+		norm->minchar = font[4] | (font[5] << 8);
+		norm->maxchar = font[6] | (font[7] << 8);
+		norm->defchar = font[8] | (font[9] << 8);
+		for (i = norm->minchar; i <= norm->maxchar; i++) {
+			int m = (i - norm->minchar) * 4 + 12;
+			norm->glyphs[i - norm->minchar] =
+				font[m] | (font[m+1] << 8);
+		}
+	}
 	sf_VGA_SFONT = Norm = makefont(norm);
 	if (!Norm)
 		os_fatal("malloc() failure in initfonts()");
