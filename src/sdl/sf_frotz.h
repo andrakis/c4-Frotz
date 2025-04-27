@@ -136,7 +136,7 @@ void sf_flushtext(void);
 typedef struct {
 	zbyte dx;
 	zbyte w, h;
-	char xof, yof;
+	signed char xof, yof;
 	zbyte bitmap[0];
 } SF_glyph;
 
