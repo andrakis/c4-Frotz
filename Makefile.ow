@@ -28,20 +28,6 @@ WLIB = wlib
 RM = %erase
 
 BINNAME = frotz.exe
-VERSION = "2.55"
-
-# MS-DOS command.com and Unix sh have different shell quoting rules.  Try to
-# detect which one we are running under.
-!ifdef %COMSPEC
-!ifndef %SHELL
-VER = -DVERSION=$(VERSION)
-!endif
-!endif
-!ifdef %SHELL
-!ifndef %COMSPEC
-VER = -DVERSION='$(VERSION)'
-!endif
-!endif
 
 OW_DOS_DIR = src/dos/
 DOS_OBJECTS =   $(OW_DOS_DIR)dosinit.o

@@ -292,8 +292,14 @@ CURSES_CFLAGS += -D_XOPEN_SOURCE_EXTENDED
 CURSES_DEFINE = USE_NCURSES_H
 endif
 
+NAME = frotz
+VERSION = 2.56pre
+#RELEASE_NOTES = "Official release."
+RELEASE_NOTES = "Development release."
 
 # Export variables to sub-Makefiles.
+export VERSION
+export RELEASE_NOTES
 export CC
 export CFLAGS
 export CURSES_CFLAGS
@@ -332,10 +338,6 @@ export X11_PKGS
 export X11_CFLAGS
 export X11_CFLAGS_DEF
 
-NAME = frotz
-VERSION = 2.56pre
-#RELEASE_NOTES = "Official release."
-RELEASE_NOTES = "Development release."
 
 # If we're working from git, we have access to proper variables.
 # If not, make it clear that we're working from a release.
@@ -599,6 +601,7 @@ ifeq ($(wildcard $(COMMON_DEFINES)),)
 	@echo "** Generating $@"
 	@echo "#ifndef COMMON_DEFINES_H" > $@
 	@echo "#define COMMON_DEFINES_H" >> $@
+	@echo "#define VERSION \"$(VERSION)\"" >> $@
 	@echo "#define RELEASE_NOTES \"$(RELEASE_NOTES)\"" >> $@
 
 ifeq ($(EXPORT_TYPE), dos)
