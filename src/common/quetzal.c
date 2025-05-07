@@ -18,6 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+/* For reference information on the Quetzal file standard, see
+ * http://inform-fiction.org/zmachine/standards/quetzal/index.html
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "frotz.h"
@@ -48,13 +52,17 @@ static zword frames[STACK_SIZE / 4 + 1];
  */
 #define makeid(a,b,c,d) ((zlong) (((zlong)(a)<<24) | ((zlong)(b)<<16) | ((zlong)(c)<<8) | (zlong)(d)))
 
-#define ID_FORM makeid ('F','O','R','M')
-#define ID_IFZS makeid ('I','F','Z','S')
-#define ID_IFhd makeid ('I','F','h','d')
-#define ID_UMem makeid ('U','M','e','m')
-#define ID_CMem makeid ('C','M','e','m')
-#define ID_Stks makeid ('S','t','k','s')
-#define ID_ANNO makeid ('A','N','N','O')
+#define ID_FORM makeid ('F','O','R','M') /* First four bytes of an IFF file */
+#define ID_IFZS makeid ('I','F','Z','S') /* Form type for a Quetzal file */
+#define ID_IFhd makeid ('I','F','h','d') /* Data stored here */
+#define ID_UMem makeid ('U','M','e','m') /* Header */
+#define ID_CMem makeid ('C','M','e','m') /* Compressed data */
+#define ID_Stks makeid ('S','t','k','s') /* Z-machine stack */
+#define ID_ANNO makeid ('A','N','N','O') /* Annotation (in ascii) */
+
+/* These two are not currently used by Frotz */
+#define ID_AUTH makeid ('A','U','T','H') /* Author (in ascii) */
+#define ID_COPY makeid ('(','c',')',' ') /* Copyright info (in ascii) */
 
 /*
  * Various parsing states within restoration.
