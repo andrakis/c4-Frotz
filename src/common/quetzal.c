@@ -179,7 +179,7 @@ zword restore_quetzal(FILE * svf, FILE * stf)
 		case ID_IFhd:
 			if (progress & GOT_HEADER) {
 				print_string
-				    ("Save file has two IFZS chunks!\n");
+				    ("Save file has two IFhd chunks!\n");
 				return fatal;
 			}
 			progress |= GOT_HEADER;
