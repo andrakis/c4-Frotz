@@ -949,7 +949,7 @@ FILE *os_path_open(const char *name, const char *mode)
 	if (p != NULL) {
 		while (*p) {
 			bp = buf;
-			while (*p && *p != OS_PATHSEP)
+			while (*p && *p != OS_SEARCH_PATHSEP)
 				lastch = *bp++ = *p++;
 			if (lastch != '\\' && lastch != '/')
 				*bp++ = '\\';

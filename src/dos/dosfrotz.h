@@ -20,7 +20,10 @@
 #define RM_OFFSET(addr)		(addr & 0xF)
 #define RM_SEGMENT(addr)	((addr >> 4) & 0xFFFF)
 
-#define OS_PATHSEP ';'
+#define OS_PATH_SEPARATOR '\\'
+#define OS_ALT_PATH_SEPARATOR '/'
+
+#define OS_SEARCH_PATHSEP ';'
 
 #define byte0(v)	((byte *)&v)[0]
 #define byte1(v)	((byte *)&v)[1]

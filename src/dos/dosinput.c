@@ -749,7 +749,6 @@ zchar os_read_line(int max, zchar *buf, int timeout, int width, int continued)
 {
 	int key = continued ? 9999 : 0;
 
-	/* Initialise input variables */
 	input.buffer = buf;
 	input.pos = strlen((char *) buf);
 	input.length = strlen((char *) buf);
@@ -882,8 +881,8 @@ char *os_read_file_name (const char *default_name, int flag)
 	bool saved_replay = istream_replay;
 	bool saved_record = ostream_record;
 
-	int i;
-	char *tempname;
+	char* basename;
+	size_t prefix_len;
 	char file_name[FILENAME_MAX + 1];
 	char *ext;
 
@@ -901,9 +900,8 @@ char *os_read_file_name (const char *default_name, int flag)
 	if (flag == FILE_RECORD || flag == FILE_PLAYBACK)
 		extension = EXT_COMMAND;
 
-	if (flag == FILE_NO_PROMPT) {
-		file_name[0] = 0;
-	} else {
+	file_name[0] = 0;
+	if (flag != FILE_NO_PROMPT) {
 		/* Input file name (reserve four bytes for a file name extension) */
 		print_string("Enter file name (\"");
 		print_string(extension);
@@ -916,30 +914,51 @@ char *os_read_file_name (const char *default_name, int flag)
 	/* Use the default name if nothing was typed */
 	if (file_name[0] == 0)
 		strcpy(file_name, default_name);
-	if (strchr(file_name, '.') == NULL)
-		strcat(file_name, extension);
 
-	/* FIXME: UNTESTED Check if we're restricted to one directory. */
-	if (f_setup.restricted_path != NULL) {
-		for (i = strlen(file_name); i > 0; i--) {
-			if (file_name[i] == PATH_SEPARATOR) {
-				i++;
-				break;
-			}
+	/* Find last path separator in file name */
+	for (basename = (file_name + strlen(file_name) - 1);
+		 basename != file_name;
+		 basename--) {
+		if ((*basename == OS_PATH_SEPARATOR) ||
+			(*basename == OS_ALT_PATH_SEPARATOR))
+		{
+			basename++;
+			break;
 		}
-		tempname = strdup(file_name + i);
+	}
+	/* If there's no dot anywhere after the last path separator,
+	   add the file extension */
+	if (strchr(basename, '.') == NULL)
+		strcat(basename, extension);
+
+	/* Check if we're restricted to one directory. */
+	if (f_setup.restricted_path && *f_setup.restricted_path) {
+		prefix_len = strlen(f_setup.restricted_path);
+		if ((f_setup.restricted_path[prefix_len - 1] != OS_PATH_SEPARATOR) &&
+			(f_setup.restricted_path[prefix_len - 1] != OS_ALT_PATH_SEPARATOR))
+		{
+			prefix_len++;
+		}
+		/* Make sure we have space in the string for the user-input basename
+		   plus the restricted path prefix we'll be inserting */
+		if ((prefix_len + strlen(basename)) > FILENAME_MAX)
+		{
+			/* Gotta bail out... */
+			os_warn("Pathname too long");
+			return NULL;
+		}
+		/* Move basename to its new position */
+		memmove(file_name + prefix_len, basename, (strlen(basename) + 1));
+		/* Apply prefix and path separator */
 		strcpy(file_name, f_setup.restricted_path);
-		if (file_name[strlen(file_name)-1] != PATH_SEPARATOR) {
-			strcat(file_name, "\\");
-		}
-		strcat(file_name, tempname);
+		file_name[prefix_len - 1] = OS_PATH_SEPARATOR;
 	}
 
 	if (flag == FILE_NO_PROMPT) {
 		ext = strrchr(file_name, '.');
 		if (strncmp(ext, EXT_AUX, 4)) {
 			os_warn("Blocked unprompted access of %s. Should only be %s files.", file_name, EXT_AUX);
-                        return NULL;
+			return NULL;
 		}
 	}
 	/* Make sure it is safe to use this file name */
