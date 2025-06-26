@@ -1151,19 +1151,34 @@ void z_get_wind_prop(void)
 {
 	flush_buffer();
 
-	if (zargs[1] < 16)
-		store(((zword *) (wp + winarg0()))[zargs[1]]);
-	else if (zargs[1] == 16)
-		store (os_to_true_colour(lo (wp [winarg0 ()].colour)));
-	else if (zargs[1] == 17) {
-		zword bg = hi (wp [winarg0 ()].colour);
-		if (bg == TRANSPARENT_COLOUR)
-			store ((zword) -4);
-		else
-			store (os_to_true_colour (bg));
-	} else
-		runtime_error(ERR_ILL_WIN_PROP);
-
+	/* Hack for Zork0_r242 */
+	if (story_id == ZORK_ZERO && z_header.release == 242 && zargc == 3) {
+		if (zargs[2] < 16)
+			storew((zword) (zargs[1] + 2), ((zword *) (wp + winarg0()))[zargs[2]]);
+		else if (zargs[2] == 16)
+			storew ((zword) (zargs[1] + 2), os_to_true_colour(lo (wp [winarg0 ()].colour)));
+		else if (zargs[2] == 17) {
+			zword bg = hi (wp [winarg0 ()].colour);
+			if (bg == TRANSPARENT_COLOUR)
+				storew ((zword) (zargs[1] + 2), (zword) -4);
+			else
+				storew ((zword) (zargs[1] + 2), os_to_true_colour (bg));
+		} else
+			runtime_error(ERR_ILL_WIN_PROP);
+	} else {
+		if (zargs[1] < 16)
+			store(((zword *) (wp + winarg0()))[zargs[1]]);
+		else if (zargs[1] == 16)
+			store (os_to_true_colour(lo (wp [winarg0 ()].colour)));
+		else if (zargs[1] == 17) {
+			zword bg = hi (wp [winarg0 ()].colour);
+			if (bg == TRANSPARENT_COLOUR)
+				store ((zword) -4);
+			else
+				store (os_to_true_colour (bg));
+		} else
+			runtime_error(ERR_ILL_WIN_PROP);
+	}
 } /* z_get_wind_prop */
 
 
@@ -1335,10 +1350,19 @@ void z_put_wind_prop(void)
 {
 	flush_buffer();
 
-	if (zargs[1] >= 16)
-		runtime_error(ERR_ILL_WIN_PROP);
+	/* Hack for Zork0_r242 */
+	if (story_id == ZORK_ZERO && z_header.release == 242 && zargs[1] >= 16) {
+		if (zargs[2] >= 16)
+			runtime_error(ERR_ILL_WIN_PROP);
 
-	((zword *) (wp + winarg0()))[zargs[1]] = zargs[2];
+		zword cnt, i, value;
+		LOW_WORD(zargs[1], cnt)		/* Get number of values */
+		for (i = 0; i < cnt; i++) {
+			LOW_WORD(zargs[1] + (i + 1) * 2, value)
+			((zword *) (wp + winarg0()))[zargs[2] + i] = value;
+		}
+	} else
+		((zword *) (wp + winarg0()))[zargs[1]] = zargs[2];
 } /* z_put_wind_prop */
 
 
