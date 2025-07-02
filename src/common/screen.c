@@ -215,7 +215,7 @@ void set_more_prompts(bool flag)
  */
 static int units_left(void)
 {
-	if (cwin == 1) return 999;
+	if (cwin == 1) return 999; /* Avoid garbling status line. */
 	return cwp->x_size - cwp->right - cwp->x_cursor + 1;
 } /* units_left */
 
