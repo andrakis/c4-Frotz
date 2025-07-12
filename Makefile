@@ -140,9 +140,13 @@ X11_LDFLAGS_DEF = -lXt -lX11 -lpng16 -ljpeg -lz -lm
 # Under normal circumstances, nothing in this section should be changed.
 #########################################################################
 
-# Windows - don't build
 ifeq ($(OS),Windows_NT)
-$(error Compilation on Windows not supported)
+WINDOWS_BUILD := 1
+CFLAGS += -DNO_STRNDUP
+ONLY_TARGET := dumb
+else
+WINDOWS_BUILD := 0
+ONLY_TARGET :=
 endif
 
 # Try to use "command -v" to locate executables.  If it's not present,
