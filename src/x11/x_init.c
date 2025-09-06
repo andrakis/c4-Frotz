@@ -103,11 +103,13 @@ void os_fatal(const char *s, ...)
 	va_end(m);
 	fprintf(stderr, "\n\n");
 
-	os_set_text_style(BOLDFACE_STYLE);
-	print_c_string("Fatal error: ");
-	os_set_text_style(NORMAL_STYLE);
-	print_c_string(errorstring);
-	new_line();
+	if (x_setup.x_active) {
+		os_set_text_style(BOLDFACE_STYLE);
+		print_c_string("Fatal error: ");
+		os_set_text_style(NORMAL_STYLE);
+		print_c_string(errorstring);
+		new_line();
+	}
 
 	if (f_setup.ignore_errors) {
 		os_display_string((zchar *) "Continuing anyway...");
@@ -115,7 +117,9 @@ void os_fatal(const char *s, ...)
 		new_line();
 	}
 
-	os_reset_screen();
+	if (x_setup.x_active)
+		os_reset_screen();
+
 	os_quit(EXIT_FAILURE);
 } /* os_fatal */
 
@@ -584,6 +588,9 @@ void os_init_screen(void)
 	cursor_gc = XCreateGC(dpy, main_window,
 			      GCFunction | GCForeground | GCBackground |
 			      GCFillStyle, &gc_setup);
+
+	/* Let os_fatal know the graphics contexts have been initialized */
+	x_setup.x_active = 1;
 
 	for(;;) {
 		XEvent e;
