@@ -674,7 +674,7 @@ int os_random_seed(void)
 
 void os_init_setup(void)
 {
-	memset(&f_setup, 0, sizeof(x_setup));
+	memset(&x_setup, 0, sizeof(x_setup));
 	return;
 }
 
