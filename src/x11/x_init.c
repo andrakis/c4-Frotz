@@ -323,6 +323,9 @@ void os_process_arguments(int argc, char *argv[])
 	char *p;
 	int i;
 	XrmValue value;
+	bool  bad_option;
+
+	bad_option = FALSE;
 
 	saved_argv = malloc(sizeof(char *) * argc);
 	memcpy(saved_argv, argv, sizeof(char *) * argc);
@@ -366,7 +369,12 @@ void os_process_arguments(int argc, char *argv[])
 		os_quit(EXIT_SUCCESS);
 	}
 
-	if (argc < 2) {
+	if (argv[1] != NULL && argv[1][0] == '-') {
+		bad_option = TRUE;
+		printf("%s: illegal option '%s'\n", argv[0], argv[1]);
+	}
+
+	if (argc < 2 || bad_option) {
 		printf("FROTZ V%s - X11 interface.\n", VERSION);
 		puts(INFORMATION);
 		puts(INFO2);
