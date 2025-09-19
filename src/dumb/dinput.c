@@ -20,6 +20,7 @@
  */
 
 #include <string.h>
+#include <assert.h>
 
 #include "dfrotz.h"
 
@@ -520,7 +521,7 @@ zchar os_read_line (int UNUSED (max), zchar *buf, int timeout, int UNUSED(width)
  */
 char *os_read_file_name (const char *default_name, int flag)
 {
-	char file_name[FILENAME_MAX + 1];
+	static char file_name[FILENAME_MAX + 1];
 	char prompt[INPUT_BUFFER_SIZE];
 
 	char fullpath[INPUT_BUFFER_SIZE];
@@ -531,6 +532,7 @@ char *os_read_file_name (const char *default_name, int flag)
 	char path_separator[2];
 	int i;
 	char *ext;
+	bool freebuf = FALSE;
 
 	path_separator[0] = PATH_SEPARATOR;
 	path_separator[1] = 0;
@@ -539,7 +541,8 @@ char *os_read_file_name (const char *default_name, int flag)
  	 * our filename is already provided.  Just go ahead silently.
 	 */
 	if (f_setup.restore_mode) {
-		return strdup(default_name);
+		/* Caller always strdups */
+		return (char*)default_name;
 	} else if (flag == FILE_NO_PROMPT) {
 		ext = strrchr(default_name, '.');
 		if (strncmp(ext, EXT_AUX, 4)) {
@@ -561,6 +564,7 @@ char *os_read_file_name (const char *default_name, int flag)
 		dumb_read_misc_line(fullpath, prompt);
 
 		/* If using default filename... */
+		freebuf = TRUE;
 		if (strlen(fullpath) == 0)
 			buf = strndup(default_name, MAX_FILE_NAME);
 		else /* Using supplied filename... */
@@ -568,11 +572,14 @@ char *os_read_file_name (const char *default_name, int flag)
 
 		if (strlen(buf) > MAX_FILE_NAME) {
 			printf("Filename too long\n");
+			free(buf);
 			return NULL;
 		}
 	}
 
+	assert(buf);
 	strncpy(file_name, buf, FILENAME_MAX);
+	if (freebuf) free(buf);
 
 	/* Check if we're restricted to one directory. */
 	if (f_setup.restricted_path != NULL) {
@@ -620,7 +627,7 @@ char *os_read_file_name (const char *default_name, int flag)
 		if (tolower(fullpath[0]) != 'y')
 			return NULL;
 	}
-	return strdup(file_name);
+	return file_name;
 } /* os_read_file_name */
 
 
