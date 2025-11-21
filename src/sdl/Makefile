@@ -22,7 +22,7 @@ SDL_CFLAGS += $(shell $(PKG_CONFIG) $(SDL_PKGS) --cflags)
 SDL_SOUND_CFLAGS += $(shell $(PKG_CONFIG) $(SDL_SOUND_PKGS) --cflags)
 else
 SDL_CFLAGS += $(SDL_CFLAGS_DEF)
-SD_SOUND_CFLAGS += $(SDL_SOUND_CFLAGS_DEF)
+SDL_SOUND_CFLAGS += $(SDL_SOUND_CFLAGS_DEF)
 endif
 
 
@@ -32,7 +32,7 @@ $(TARGET): $(DEFINES) $(OBJECTS) | $(DEFINES)
 	@echo "** Done with SDL interface."
 
 %.o: %.c $(DEFINES)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -fPIC -fpic -o $@ -c $<
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) $(SDL_SOUND_CFLAGS) -fPIC -fpic -o $@ -c $<
 
 $(DEFINES):
 	@echo "** Generating $@"
