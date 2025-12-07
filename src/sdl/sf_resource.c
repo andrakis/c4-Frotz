@@ -229,7 +229,7 @@ FILE *os_path_open(const char *name, const char *mode)
  * variables respectively when this picture number is asked for.
  *
  */
-int os_picture_data(int picture, int *height, int *width)
+bool os_picture_data(int picture, int *height, int *width)
 {
 	if (maxlegalpic) {
 		if (picture == 0) {

@@ -948,7 +948,7 @@ zchar os_read_line (int bufmax, zchar *buf, int timeout, int width,
  * return it. Input aborts after timeout/10 seconds.
  *
  */
-zchar os_read_key (int timeout, int cursor)
+zchar os_read_key (int timeout, bool cursor)
 {
 	zchar c;
 

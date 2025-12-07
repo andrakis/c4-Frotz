@@ -923,7 +923,7 @@ zword sf_read_key(int timeout, bool cursor, bool allowed, bool text)
  * return it. Input aborts after timeout/10 seconds.
  *
  */
-zchar os_read_key(int timeout, int cursor)
+zchar os_read_key(int timeout, bool cursor)
 {
 	return sf_read_key(timeout, cursor, false, true);
 } /* os_read_key */

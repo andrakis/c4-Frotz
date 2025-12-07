@@ -900,7 +900,7 @@ int os_peek_colour(void)
  * pictures and the release number instead.
  *
  */
-int os_picture_data(int picture, int *height, int *width)
+bool os_picture_data(int picture, int *height, int *width)
 {
 	int index;
 	*height = 0;

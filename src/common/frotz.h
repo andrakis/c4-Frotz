@@ -47,7 +47,19 @@ void huge *zrealloc(void huge *p, long size, size_t old_size);
 
 #ifndef __UNIX_PORT_FILE
 #include <signal.h>
+
+#if __STDC_VERSION__ >= 199901L
+#include <stdbool.h>
+
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
+#else
 typedef int bool;
+#endif
 #endif /* __UNIX_PORT_FILE */
 
 
@@ -899,12 +911,12 @@ void	os_init_sound(void);
 FILE	*os_load_story(void);
 void 	os_more_prompt(void);
 int  	os_peek_colour(void);
-int  	os_picture_data(int, int *, int *);
+bool  	os_picture_data(int, int *, int *);
 void 	os_prepare_sample(int);
 void 	os_process_arguments(int, char *[]);
 int	os_random_seed(void);
 char  	*os_read_file_name(const char *, int);
-zchar	os_read_key(int, int);
+zchar	os_read_key(int, bool);
 zchar	os_read_line(int, zchar *, int, int, int);
 void 	os_reset_screen(void);
 void 	os_restart_game(int);

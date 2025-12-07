@@ -122,7 +122,7 @@ zchar os_read_line(int max, zchar * buf, int timeout, int UNUSED (width), int UN
  * return it. Input aborts after timeout/10 seconds.
  *
  */
-zchar os_read_key(int UNUSED (timeout), int cursor)
+zchar os_read_key(int UNUSED (timeout), bool cursor)
 {
 	XEvent ev;
 	char result[2];
