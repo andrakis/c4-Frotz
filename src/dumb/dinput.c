@@ -234,6 +234,8 @@ static bool dumb_read_line(char *s, char *prompt, bool show_cursor,
 {
 	time_t start_time;
 
+	start_time = time(0);
+
 	if (timeout) {
 		if (time_ahead >= timeout) {
 			time_ahead -= timeout;
