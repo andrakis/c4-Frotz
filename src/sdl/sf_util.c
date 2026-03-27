@@ -850,8 +850,8 @@ static int dialog_read_file_name(char *file_name, const char *default_name,
 	if (st == SF_NOTIMP)
 		return st;
 	if (st == 0) {
-		strncpy(file_name, res, MAX_FILE_NAME - EXT_LENGTH);
-		file_name[MAX_FILE_NAME - 1] = 0;
+		strncpy(file_name, res, FILENAME_MAX);
+		file_name[FILENAME_MAX] = 0;
 		return 1;
 	}
 	return 0;
