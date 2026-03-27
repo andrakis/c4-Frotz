@@ -1168,6 +1168,29 @@ STATIC zword Zentry(int x, int y)
 			}
 			continue;
 		}
+		if (c == VK_DEL) {
+			if (pos < nchars) {
+				clen = 1;
+#ifndef USE_UTF8
+				cpos = pos;
+#else
+				cpos = utf8_char_pos(filename, pos);
+				while ((filename[cpos + clen] & 0xc0) ==
+				       0x80)
+					clen++;
+#endif
+				/* needs mystrcpy() because
+				 * overlapping src-dst */
+				if (cpos < n)
+					mystrcpy(filename + cpos,
+						 filename + cpos + clen);
+				n -= clen;
+				nchars--;
+				filename[n] = 0;
+				showfilename(pos);
+			}
+			continue;
+		}
 #ifndef USE_UTF8
 		if ((c >= 32 && c < 127) || (c >= 160 && c < 256))
 #else
