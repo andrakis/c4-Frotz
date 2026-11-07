@@ -433,6 +433,11 @@ static cell_t make_cell(int style, short fg, short bg, zchar c)
 	if (f_setup.format != FORMAT_NORMAL) {
 		cel.bg = bg;
 		cel.fg = fg;
+	} else {
+		/* c4: dumb_set_cell compares these, so they must not be whatever
+		 * the stack held */
+		cel.bg = DEFAULT_DUMB_COLOUR;
+		cel.fg = DEFAULT_DUMB_COLOUR;
 	}
 	return cel;
 } /* make_cell */

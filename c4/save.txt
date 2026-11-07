@@ -1,0 +1,14 @@
+open mailbox
+take leaflet
+save
+frzsave.qzl
+drop leaflet
+south
+east
+inventory
+restore
+frzsave.qzl
+inventory
+look
+quit
+y

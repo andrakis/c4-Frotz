@@ -189,6 +189,19 @@ void os_process_arguments(int argc, char *argv[])
 		}
 	} while (c != EOF);
 
+#ifdef C4FRZ
+	/* c4: no story named, so the one this program's name says (c4/frz-story.c) */
+	if (argv[zoptind] == NULL) {
+		extern char *frz_story(char *prog);
+		static char *frz_argv[3];
+		frz_argv[1] = frz_story(argv[0]);
+		if (frz_argv[1] != NULL) {
+			frz_argv[0] = argv[0];
+			argv = frz_argv;
+			zoptind = 1;
+		}
+	}
+#endif
 	if (argv[zoptind] == NULL) {
 		usage();
 		os_quit(EXIT_SUCCESS);

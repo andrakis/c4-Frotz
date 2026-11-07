@@ -21,6 +21,7 @@
 
 #include "frotz.h"
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef NO_STRRCHR
 char *my_strrchr(const char *s, int c)

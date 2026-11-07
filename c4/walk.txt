@@ -1,0 +1,31 @@
+$verify
+open mailbox
+read leaflet
+drop leaflet
+south
+east
+open window
+west
+inventory
+west
+take sword
+take lamp
+move rug
+open trap door
+turn on lamp
+down
+north
+hit troll with sword
+hit troll with sword
+hit troll with sword
+hit troll with sword
+hit troll with sword
+hit troll with sword
+hit troll with sword
+hit troll with sword
+inventory
+score
+xyzzy
+look
+quit
+y
