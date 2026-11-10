@@ -1,6 +1,9 @@
 # Frotz (games/frotz): the Z-machine, and Zork I, II and III, which are
 # lazy (hostdir, vfsload.c). zork1, zork2 and zork3 are frotz again: a
 # program with no story named plays the one its own name says (c4/frz-story.c)
+#@app Games/Text Adventures|Zork I|zork1
+#@app Games/Text Adventures|Zork II|zork2
+#@app Games/Text Adventures|Zork III|zork3
 frotz/:
 	frotz.c4r: c4ix-frotz.c4r
 	zork1.c4r: c4ix-frotz.c4r
