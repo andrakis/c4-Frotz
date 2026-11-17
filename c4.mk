@@ -14,17 +14,17 @@ FRZ_COMMON := buffer err fastmem files getopt hotkey input main math missing obj
 FRZ_DUMB   := dinit dinput doutput dpic
 FRZ_HDRS   := $(wildcard $(FRZ)/src/common/*.h $(FRZ)/src/dumb/*.h $(FRZ)/c4/*.h $(FRZ)/c4/sys/*.h) \
               $(wildcard src/c4ix/libc/include/*.h src/c4ix/libc/include/sys/*.h)
-FRZ_CC     := ./c4sp32 -c 400000 src/c4sp/lisp/c4lc.lisp -O $(IMG_G) -mfuse -fno-builtin -c -conforming \
+FRZ_CC     := $(call lc32,-c 400000) -O $(IMG_G) -mfuse -fno-builtin -c -conforming \
               -D C4FRZ -D NO_BASENAME -I $(FRZ)/c4 -I src/c4ix/libc/include \
               -I $(FRZ)/src/common -I $(FRZ)/src/dumb
 frotz-objs: $(FRZ_COMMON:%=.frotz/%.c4o) $(FRZ_DUMB:%=.frotz/%.c4o) .frotz/frz-story.c4o
-.frotz/%.c4o: $(FRZ)/src/common/%.c $(FRZ_HDRS) $(C4LC_LISP) .img_g | c4sp32
+.frotz/%.c4o: $(FRZ)/src/common/%.c $(FRZ_HDRS) $(C4LC_LISP) .img_g | $(LC32_BIN)
 	@mkdir -p .frotz
 	$(FRZ_CC) $< $@ > /dev/null
-.frotz/%.c4o: $(FRZ)/src/dumb/%.c $(FRZ_HDRS) $(C4LC_LISP) .img_g | c4sp32
+.frotz/%.c4o: $(FRZ)/src/dumb/%.c $(FRZ_HDRS) $(C4LC_LISP) .img_g | $(LC32_BIN)
 	@mkdir -p .frotz
 	$(FRZ_CC) $< $@ > /dev/null
-.frotz/%.c4o: $(FRZ)/c4/%.c $(FRZ_HDRS) $(C4LC_LISP) .img_g | c4sp32
+.frotz/%.c4o: $(FRZ)/c4/%.c $(FRZ_HDRS) $(C4LC_LISP) .img_g | $(LC32_BIN)
 	@mkdir -p .frotz
 	$(FRZ_CC) $< $@ > /dev/null
 GAME_OBJS += frotz-objs
