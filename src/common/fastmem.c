@@ -50,7 +50,7 @@ extern void restart_screen (void);
 extern void refresh_text_style (void);
 extern void call (zword, int, zword *, int);
 extern void split_window (zword);
-extern void script_open (void);
+extern void script_open (bool);
 extern void script_close (void);
 
 
@@ -718,7 +718,7 @@ void storeb(zword addr, zbyte value)
 
 		if (value & SCRIPTING_FLAG) {
 			if (!ostream_script)
-				script_open();
+				script_open(FALSE);
 		} else {
 			if (ostream_script)
 				script_close();
